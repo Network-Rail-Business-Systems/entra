@@ -1,5 +1,7 @@
 <?php
 
+namespace NetworkRailBusinessSystems\Entra;
+
 use App\Http\Controllers\EntraController;
 use App\Listeners\EntraListener;
 use Dcblogdev\MsGraph\Events\NewMicrosoft365SignInEvent;

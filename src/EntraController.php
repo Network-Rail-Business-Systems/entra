@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace NetworkRailBusinessSystems\Entra;
 
 use Dcblogdev\MsGraph\Facades\MsGraph;
 use Illuminate\Http\RedirectResponse;

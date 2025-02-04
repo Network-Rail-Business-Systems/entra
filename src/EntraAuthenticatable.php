@@ -1,5 +1,7 @@
 <?php
 
+namespace NetworkRailBusinessSystems\Entra;
+
 use Illuminate\Contracts\Auth\Authenticatable;
 
 /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Listeners;
+namespace NetworkRailBusinessSystems\Entra;
 
 use Dcblogdev\MsGraph\Events\NewMicrosoft365SignInEvent;
 use Dcblogdev\MsGraph\MsGraph;
