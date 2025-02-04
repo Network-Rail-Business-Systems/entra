@@ -1,0 +1,19 @@
+{
+    "name": "entra",
+    "description": "Easily sign-in and poll users and groups in Microsoft Entra",
+    "keywords": ["laravel", "entra", "microsoft", "graph", "auth"],
+    "author": "Anthony Edmonds",
+    "license": "MIT",
+    "homepage": "https://github.com/Network-Rail-Business-Systems/entra",
+    "scripts": {
+        "badges": "php vendor/networkrailbusinesssystems/badges/badges.php",
+        "larastan": "php vendor/bin/phpstan analyse --memory-limit 512M",
+        "pint": "php ./vendor/bin/pint --preset=per",
+        "prepare": "husky install",
+        "test": "php vendor/bin/paratest",
+        "test-slow": "php vendor/bin/phpunit"
+    },
+    "devDependencies": {
+        "husky": "^8"
+    }
+}
