@@ -20,7 +20,7 @@ class EntraServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->publishes([
-            __DIR__ . '/../../config/govuk.php' => config_path('govuk.php'),
+            __DIR__ . '/entra.php' => config_path('entra.php'),
         ], 'entra');
 
         Route::macro('entra', function () {
