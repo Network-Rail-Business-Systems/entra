@@ -3,8 +3,6 @@
 namespace NetworkRailBusinessSystems\Entra;
 
 use Dcblogdev\MsGraph\Events\NewMicrosoft365SignInEvent;
-use Illuminate\Foundation\Application;
-use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
@@ -27,30 +25,21 @@ class EntraServiceProvider extends ServiceProvider
 
         Route::macro('entra', function () {
             Route::prefix('/entra')
-                ->name('entra.')
                 ->controller(EntraController::class)
                 ->group(function () {
                     Route::middleware('guest')->group(function () {
-                        Route::get('/connect', 'connect')->name('connect');
+                        Route::get('/connect', 'connect')->name('login');
                     });
 
                     Route::middleware('MsGraphAuthenticated')->group(function () {
-                        Route::get('/disconnect', 'disconnect')->name('disconnect');
+                        Route::get('/disconnect', 'disconnect')->name('logout');
                     });
                 });
         });
 
-        // TODO Is this needed? I think so
         Event::listen(
             NewMicrosoft365SignInEvent::class,
             [EntraListener::class, 'handle'],
         );
-
-        Application::configure()
-            ->withMiddleware(function (Middleware $middleware) {
-                $middleware->redirectGuestsTo(function () {
-                    return route('entra.connect');
-                });
-            });
     }
 }

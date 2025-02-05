@@ -36,9 +36,9 @@ You can use the `Laravel Microsoft Graph` library as normal.
 
 ### Manual sign-in and out
 
-You can allow users to manually login by providing link to the `entra.connect` route.
+You can allow users to manually login by providing link to the `login` route.
 
-Users can logout by calling the `entra.disconnect` route.
+Users can logout by calling the `logout` route.
 
 ## Entra sign-in response
 
