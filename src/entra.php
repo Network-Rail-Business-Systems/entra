@@ -1,17 +1,18 @@
 <?php
 
 return [
-    // Entra => Laravel
+    // These attributes will be synced on login, remove to disable keys
+    // Keys are in Entra => Laravel format
     'sync_attributes' => [
         "displayName" => "name",
         "givenName" => "first_name",
+        "id" => "azure_id",
         "jobTitle" => "title",
         "mail" => "email",
         "mobilePhone" => "phone",
         "officeLocation" => "office",
         "surname" => "last_name",
         "userPrincipalName" => "username",
-        "id" => "azure_id",
     ],
 
     // The FQN of the Model to be used for Users

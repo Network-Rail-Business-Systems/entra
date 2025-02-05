@@ -2,14 +2,12 @@
 
 namespace NetworkRailBusinessSystems\Entra;
 
-use App\Http\Controllers\EntraController;
-use App\Listeners\EntraListener;
 use Dcblogdev\MsGraph\Events\NewMicrosoft365SignInEvent;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 
-class GovukServiceProvider extends ServiceProvider
+class EntraServiceProvider extends ServiceProvider
 {
     public function register(): void
     {

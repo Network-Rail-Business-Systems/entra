@@ -4,11 +4,13 @@ namespace NetworkRailBusinessSystems\Entra;
 
 use Illuminate\Contracts\Auth\Authenticatable;
 
-/**
- * @property string $email
- * @property int $id
- */
 interface EntraAuthenticatable extends Authenticatable
 {
-    //
+    public static function getEntraModel(array $details): self;
+
+    public function syncEntraDetails(array $details): self;
+
+    public function entraId(): string;
+
+    public function entraEmail(): string;
 }
