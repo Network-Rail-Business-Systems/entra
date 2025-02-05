@@ -1,5 +1,11 @@
 # Entra
 
+![Composer status](.github/composer.svg)
+![Coverage status](.github/coverage.svg)
+![Laravel version](.github/laravel.svg)
+![PHP version](.github/php.svg)
+![Tests status](.github/tests.svg)
+
 Easily sign-in and poll users and groups in Microsoft Entra, built using [Laravel Microsoft Graph](https://github.com/dcblogdev/laravel-microsoft-graph). 
 
 ## Setup
