@@ -34,7 +34,7 @@ class BootTest extends TestCase
         );
 
         $this->assertTrue(
-            Event::hasListeners(NewMicrosoft365SignInEvent::class)
+            Event::hasListeners(NewMicrosoft365SignInEvent::class),
         );
 
         Route::has('login');
