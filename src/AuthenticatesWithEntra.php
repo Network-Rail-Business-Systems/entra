@@ -35,7 +35,7 @@ trait AuthenticatesWithEntra
 
     public function entraId(): string
     {
-        return (string) $this->id;
+        return $this->id;
     }
 
     public function entraEmail(): string

@@ -70,7 +70,7 @@ Dcblogdev\MsGraph\Events\NewMicrosoft365SignInEvent {
             "id" => "123ab4c5-6789-01de-f2g3-45678hijk9lm",
         ],
         "accessToken" => "... A string which is ~2400 characters long ...",
-        "refreshToken" => null,
+        "refreshToken" => ".. A string which is ~2400 characters long ...",
         "expires" => 1234567890,
     ],
     +socket: null,
