@@ -2,6 +2,7 @@
 
 namespace NetworkRailBusinessSystems\Entra\Tests;
 
+use AnthonyEdmonds\LaravelTestingTraits\AssertsRelationships;
 use Dcblogdev\MsGraph\MsGraphServiceProvider;
 use Illuminate\Foundation\Testing\WithFaker;
 use NetworkRailBusinessSystems\Entra\Tests\Data\User;
@@ -11,6 +12,7 @@ use NetworkRailBusinessSystems\Entra\EntraServiceProvider;
 abstract class TestCase extends BaseTestCase
 {
     use WithFaker;
+    use AssertsRelationships;
 
     protected function setUp(): void
     {

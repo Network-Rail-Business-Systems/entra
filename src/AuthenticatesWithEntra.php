@@ -3,9 +3,11 @@
 namespace NetworkRailBusinessSystems\Entra;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * @property string $email
+ * @property ?EntraToken $entraToken
  * @property int $id
  *
  * @mixin Model
@@ -41,5 +43,10 @@ trait AuthenticatesWithEntra
     public function entraEmail(): string
     {
         return $this->email;
+    }
+
+    public function entraToken(): HasOne
+    {
+        return $this->hasOne(EntraToken::class);
     }
 }

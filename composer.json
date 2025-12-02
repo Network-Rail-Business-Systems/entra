@@ -27,11 +27,12 @@
         "dcblogdev/laravel-microsoft-graph": "^4"
     },
     "require-dev": {
+        "anthonyedmonds/laravel-testing-traits": "^1",
         "brianium/paratest": "^7",
-        "orchestra/testbench": "^10",
-        "laravel/pint": "^1",
         "larastan/larastan": "^3",
+        "laravel/pint": "^1",
         "networkrailbusinesssystems/badges": "^1",
+        "orchestra/testbench": "^10",
         "phpunit/phpunit": "^12"
     },
     "config": {
