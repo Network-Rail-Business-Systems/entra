@@ -31,6 +31,7 @@ Easily sign-in and poll users and groups in Microsoft Entra, built using [Larave
        // Your authenticated routes here...
    }
    ```
+7. Perform any additional configuration following the [Laravel Microsoft Graph](https://github.com/dcblogdev/laravel-microsoft-graph) documentation
 
 ## Usage
 
@@ -40,39 +41,28 @@ The `EntraServiceProvider` automatically registers the relevant event listeners 
 
 You can use the `Laravel Microsoft Graph` library as normal.
 
+### Entra helper
+
+#### Entra::findUser()
+
+#### Entra::findUsers()
+
+#### Entra::importUser()
+
+### Rules
+
+#### UserExistsInEntra
+
+### Emulator
+
+#### Entra::emulate()
+
 ### Manual sign-in and out
 
-You can allow users to manually login by providing link to the `login` route.
+You can allow users to manually login by providing a link to the `login` route.
 
 Users can logout by calling the `logout` route.
 
-## Entra sign-in response
+## Entra responses
 
-An example of the response given by the Entra sign-in endpoint is provided for reference below.
-
-```php
-Dcblogdev\MsGraph\Events\NewMicrosoft365SignInEvent {
-    +token: [
-        "info" => [
-            "@odata.context" => "https://graph.microsoft.com/v1.0/$metadata#users/$entity",
-            "businessPhones" => [
-                "01234567890",
-            ],
-            "displayName" => "Joe Bloggs",
-            "givenName" => "Joe",
-            "jobTitle" => "Business Systems Developer",
-            "mail" => "Joe.Bloggs@networkrail.co.uk",
-            "mobilePhone" => "01234567890",
-            "officeLocation" => "Some Office",
-            "preferredLanguage" => null,
-            "surname" => "Bloggs",
-            "userPrincipalName" => "JBloggs2@networkrail.co.uk",
-            "id" => "123ab4c5-6789-01de-f2g3-45678hijk9lm",
-        ],
-        "accessToken" => "... A string which is ~2400 characters long ...",
-        "refreshToken" => ".. A string which is ~2400 characters long ...",
-        "expires" => 1234567890,
-    ],
-    +socket: null,
-}
-```
+Sample responses are provided in the `tests/Data` directory.

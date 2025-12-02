@@ -4,6 +4,11 @@ namespace NetworkRailBusinessSystems\Entra;
 
 class Entra
 {
+    public static function emulate(): void
+    {
+        // TODO
+    }
+
     public static function findUser(string $term, string $field = 'mail'): ?array
     {
         // TODO
