@@ -35,7 +35,6 @@ class BootTest extends TestCase
         $this->assertEquals(
             [
                 "$this->basePath/config.php" => "$this->outputPath/config/entra.php",
-                "$this->basePath/migrations" => "$this->outputPath/database/migrations",
             ],
             $publishes,
         );

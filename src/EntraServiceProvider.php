@@ -23,10 +23,6 @@ class EntraServiceProvider extends ServiceProvider
             __DIR__ . '/config.php' => config_path('entra.php'),
         ], 'entra');
 
-        $this->publishesMigrations([
-            __DIR__ . '/migrations' => database_path('migrations'),
-        ], 'entra');
-
         Route::macro('entra', function () {
             Route::prefix('/entra')
                 ->controller(EntraController::class)
