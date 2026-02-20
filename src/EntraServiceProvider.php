@@ -12,7 +12,7 @@ class EntraServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->mergeConfigFrom(
-            __DIR__ . '/entra.php',
+            __DIR__ . '/config.php',
             'entra',
         );
     }
@@ -20,7 +20,11 @@ class EntraServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->publishes([
-            __DIR__ . '/entra.php' => config_path('entra.php'),
+            __DIR__ . '/config.php' => config_path('entra.php'),
+        ], 'entra');
+
+        $this->publishesMigrations([
+            __DIR__ . '/migrations' => database_path('migrations'),
         ], 'entra');
 
         Route::macro('entra', function () {

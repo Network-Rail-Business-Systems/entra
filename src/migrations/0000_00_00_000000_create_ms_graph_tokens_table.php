@@ -26,6 +26,10 @@ return new class extends Migration {
 
     public function down(): void
     {
+        Schema::table('ms_graph_tokens', function (Blueprint $table) {
+            $table->dropForeign('fk_token_user');
+        });
+
         Schema::dropIfExists('ms_graph_tokens');
     }
 };

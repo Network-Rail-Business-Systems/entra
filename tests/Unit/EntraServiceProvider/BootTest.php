@@ -12,6 +12,10 @@ class BootTest extends TestCase
 {
     protected EntraServiceProvider $provider;
 
+    protected string $basePath;
+
+    protected string $outputPath;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -19,15 +23,22 @@ class BootTest extends TestCase
         $this->provider = new EntraServiceProvider(app());
         $this->provider->boot();
         Route::entra();
+
+        $this->basePath = realpath(__DIR__ . '/../../../src');
+        $this->outputPath = base_path();
     }
 
     public function test(): void
     {
         $publishes = EntraServiceProvider::$publishes[EntraServiceProvider::class];
-        $key = array_key_first($publishes);
 
-        $this->assertStringEndsWith('entra.php', $key);
-        $this->assertStringEndsWith('entra.php', $publishes[$key]);
+        $this->assertEquals(
+            [
+                "$this->basePath/config.php" => "$this->outputPath/config/entra.php",
+                "$this->basePath/migrations" => "$this->outputPath/database/migrations",
+            ],
+            $publishes,
+        );
 
         $this->assertTrue(
             Route::hasMacro('entra'),
