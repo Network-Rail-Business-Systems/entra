@@ -4,6 +4,7 @@ namespace NetworkRailBusinessSystems\Entra;
 
 use Dcblogdev\MsGraph\Events\NewMicrosoft365SignInEvent;
 use Dcblogdev\MsGraph\MsGraph;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
 class EntraListener
@@ -40,7 +41,16 @@ class EntraListener
         /** @var class-string<EntraAuthenticatable> $modelClass */
         $modelClass = config('entra.user_model');
 
+        /** @var EntraAuthenticatable|Model $model */
         $model = $modelClass::getEntraModel($details);
+
+        if (
+            config('entra.create_users') === false
+            && $model->exists === false
+        ) {
+            abort(403, config('entra.messages.only_existing'));
+        }
+
         return $model->syncEntraDetails($details);
     }
 }

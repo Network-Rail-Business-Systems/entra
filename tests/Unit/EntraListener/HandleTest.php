@@ -1,6 +1,6 @@
 <?php
 
-namespace NetworkRailBusinessSystems\Entra\Tests\Unit;
+namespace NetworkRailBusinessSystems\Entra\Tests\Unit\EntraListener;
 
 use Dcblogdev\MsGraph\Events\NewMicrosoft365SignInEvent;
 use Illuminate\Support\Facades\Auth;
@@ -8,8 +8,9 @@ use NetworkRailBusinessSystems\Entra\EntraListener;
 use NetworkRailBusinessSystems\Entra\Tests\Data\Token;
 use NetworkRailBusinessSystems\Entra\Tests\Data\User;
 use NetworkRailBusinessSystems\Entra\Tests\TestCase;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class EntraListenerTest extends TestCase
+class HandleTest extends TestCase
 {
     protected array $token;
 
@@ -29,16 +30,17 @@ class EntraListenerTest extends TestCase
         $this->event = new NewMicrosoft365SignInEvent($this->token);
 
         $this->listener = new EntraListener();
-        $this->listener->handle($this->event);
     }
 
     public function test(): void
     {
+        $this->listener->handle($this->event);
+
         $this->assertDatabaseHas('users', [
             'id' => 1,
         ]);
 
-        $this->user = User::find(1);
+        $this->user = User::query()->find(1);
 
         $this->assertDatabaseHas('ms_graph_tokens', [
             'access_token' => $this->token['accessToken'],
@@ -52,5 +54,19 @@ class EntraListenerTest extends TestCase
             $this->user->id,
             Auth::user()->id,
         );
+    }
+
+    public function testBlocksCreate(): void
+    {
+        $this->expectException(HttpException::class);
+        $this->expectExceptionMessage(
+            config('entra.messages.only_existing'),
+        );
+
+        config()->set('entra.create_users', false);
+
+        $this->listener->handle($this->event);
+
+        $this->assertDatabaseEmpty('users');
     }
 }
