@@ -9,6 +9,18 @@ class Entra
         // TODO
     }
 
+    public static function findGroup(string $term, string $field = 'mail'): ?array
+    {
+        // TODO
+        return [];
+    }
+
+    public static function findGroups(string $term, string $field = 'mail'): ?array
+    {
+        // TODO
+        return [];
+    }
+
     public static function findUser(string $term, string $field = 'mail'): ?array
     {
         // TODO
