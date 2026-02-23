@@ -44,7 +44,7 @@ Easily sign-in and poll users and groups in Microsoft Entra, built using [Larave
 
 ## Configuration
 
-## create_users
+### create_users
 
 Whether to allow Users without an account in the system already to sign-in.
 
@@ -89,11 +89,27 @@ These attributes controls the Entra emulator, and the mock data available to it.
 
 See the "Emulator" section further on for more information.
 
-## Usage
+## Signing in and out
 
 Users will automatically be redirected to the Microsoft Azure login page whenever they attempt to access an authenticated route as a guest.
 
 The `EntraServiceProvider` automatically registers the relevant event listeners for authentication.
+
+### Automatic
+
+If you wrap all of your system's endpoints in the `MsGraphAuthenticaed` middleware, Users will be automatically kicked to the Entra login page.
+
+Should they become signed out for whatever reason, they will be kicked to the Entra login screen.
+
+This may or may not be desirable based on how much of the system should be available to non-users.
+
+### Manual sign-in and out
+
+You can allow users to manually login by providing a link to the `login` route, which will take them to the Entra login page.
+
+Users can logout by calling the `logout` route, which will take them to the Entra logout page.
+
+## Querying Entra
 
 You can use the `Laravel Microsoft Graph` library as normal.
 
@@ -147,9 +163,9 @@ If the user already exists they will be updated.
 | $select   | ?array                | config(entra.sync_attributes) | Which fields to return                 |
 | :returns  | ?EntraAuthenticatable |                               | The user model, or null                |
 
-### Rules
+## Rules
 
-#### UserExistsInEntra
+### UserExistsInEntra
 
 Ensure that the given User exists in Entra.
 
@@ -167,7 +183,7 @@ Ensure that the given User exists in Entra.
 
 You may provide the field to match the value to as the first parameter of the Rule.
 
-### Emulator
+## Emulator
 
 It is unlikely that your unit tests will ever be connected to a live Entra instance.
 
@@ -181,31 +197,13 @@ You may also use the `AssertsEntra` trait on your base `TestCase` class to make 
 
 Emulation does not support signing in or out.
 
-#### EntraUser
+### EntraUser
 
 Defining a list of `users` on the `entra.emulator.users` key will allow you to create a custom list of users which you can re-use.
 
 Performing an `EntraUser::find` or `EntraUser::import` will return a matching user from the list.
 
 Performing an `EntraUser::list` will return a matching set of results from the list.
-
-#### Models
-
-### Signing in and out
-
-#### Automatic
-
-If you wrap all of your system's endpoints in the `MsGraphAuthenticaed` middleware, Users will be automatically kicked to the Entra login page.
-
-Should they become signed out for whatever reason, they will be kicked to the Entra login screen.
-
-This may or may not be desirable based on how much of the system should be available to non-users.
-
-#### Manual sign-in and out
-
-You can allow users to manually login by providing a link to the `login` route, which will take them to the Entra login page.
-
-Users can logout by calling the `logout` route, which will take them to the Entra logout page.
 
 ## Sample Entra responses
 
