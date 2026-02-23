@@ -83,6 +83,12 @@ use App/Models/User;
 'user_model' => User::class,
 ```
 
+### emulator
+
+These attributes controls the Entra emulator, and the mock data available to it.
+
+See the "Emulator" section further on for more information.
+
 ## Usage
 
 Users will automatically be redirected to the Microsoft Azure login page whenever they attempt to access an authenticated route as a guest.
@@ -153,7 +159,25 @@ Ensure that the given User exists in Entra.
 
 ### Emulator
 
-#### Configuration
+It is unlikely that your unit tests will ever be connected to a live Entra instance.
+
+You can mock `MsGraph` for specific calls, however you may prefer to re-use a defined list of results.
+
+The emulator only works with the models provided by this library.
+
+Setting `entra.emulator.enabled = true` in your config will enable the emulator.
+
+You may also use the `AssertsEntra` trait on your base `TestCase` class to make the `useEntraEmulator()` method available in your tests.
+
+Emulation does not support signing in or out.
+
+#### EntraUser
+
+Defining a list of `users` on the `entra.emulator.users` key will allow you to create a custom list of users which you can re-use.
+
+Performing an `EntraUser::find` or `EntraUser::import` will return a matching user from the list.
+
+Performing an `EntraUser::list` will return a matching set of results from the list.
 
 #### Models
 
@@ -180,7 +204,7 @@ Sample responses are provided in the `tests/Data` directory.
 ## Roadmap
 
 * Add 302 handler to MsGraph facade
-* Emulation
+* GroupEmulation
 * EntraGroup
 * Rules
 

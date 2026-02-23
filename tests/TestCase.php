@@ -7,10 +7,12 @@ use Dcblogdev\MsGraph\MsGraphServiceProvider;
 use Illuminate\Foundation\Testing\WithFaker;
 use NetworkRailBusinessSystems\Entra\EntraServiceProvider;
 use NetworkRailBusinessSystems\Entra\Tests\Models\User;
+use NetworkRailBusinessSystems\Entra\Traits\AssertsEntra;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
 {
+    use AssertsEntra;
     use WithFaker;
     use AssertsRelationships;
 

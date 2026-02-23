@@ -1,13 +1,15 @@
 <?php
 
-namespace NetworkRailBusinessSystems\Entra;
+namespace NetworkRailBusinessSystems\Entra\Traits;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use NetworkRailBusinessSystems\Entra\EntraAuthenticatable;
+use NetworkRailBusinessSystems\Entra\Models\EntraToken;
 
 /**
  * @property string $email
- * @property ?EntraToken $entraToken
+ * @property ?\NetworkRailBusinessSystems\Entra\Models\EntraToken $entraToken
  * @property int $id
  *
  * @mixin Model

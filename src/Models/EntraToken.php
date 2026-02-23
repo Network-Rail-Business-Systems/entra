@@ -1,6 +1,6 @@
 <?php
 
-namespace NetworkRailBusinessSystems\Entra;
+namespace NetworkRailBusinessSystems\Entra\Models;
 
 use Carbon\Carbon;
 use Dcblogdev\MsGraph\Models\MsGraphToken;

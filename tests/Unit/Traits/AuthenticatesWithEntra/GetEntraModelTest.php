@@ -1,6 +1,6 @@
 <?php
 
-namespace NetworkRailBusinessSystems\Entra\Tests\Unit\AuthenticatesWithEntra;
+namespace NetworkRailBusinessSystems\Entra\Tests\Unit\Traits\AuthenticatesWithEntra;
 
 use NetworkRailBusinessSystems\Entra\Tests\Models\User;
 use NetworkRailBusinessSystems\Entra\Tests\TestCase;

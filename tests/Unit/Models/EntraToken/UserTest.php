@@ -1,8 +1,8 @@
 <?php
 
-namespace NetworkRailBusinessSystems\Entra\Tests\Unit\EntraToken;
+namespace NetworkRailBusinessSystems\Entra\Tests\Unit\Models\EntraToken;
 
-use NetworkRailBusinessSystems\Entra\EntraToken;
+use NetworkRailBusinessSystems\Entra\Models\EntraToken;
 use NetworkRailBusinessSystems\Entra\Tests\Models\User;
 use NetworkRailBusinessSystems\Entra\Tests\TestCase;
 

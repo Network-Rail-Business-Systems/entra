@@ -3,7 +3,7 @@
 namespace NetworkRailBusinessSystems\Entra\Tests\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use NetworkRailBusinessSystems\Entra\EntraToken;
+use NetworkRailBusinessSystems\Entra\Models\EntraToken;
 use NetworkRailBusinessSystems\Entra\Tests\Models\User;
 
 class EntraTokenFactory extends Factory

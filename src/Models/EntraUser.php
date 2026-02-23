@@ -4,14 +4,10 @@ namespace NetworkRailBusinessSystems\Entra\Models;
 
 use NetworkRailBusinessSystems\Entra\EntraAuthenticatable;
 use NetworkRailBusinessSystems\Entra\MsGraph;
+use NetworkRailBusinessSystems\Entra\Tests\Data\Users;
 
 class EntraUser
 {
-    public static function emulate(): void
-    {
-        // TODO
-    }
-
     public static function find(
         string $term,
         string $field = 'mail',
@@ -23,7 +19,9 @@ class EntraUser
             '$top' => 1,
         ]);
 
-        $results = MsGraph::get("users?$parameters");
+        $results = self::emulatorIsEnabled() === true
+            ? self::emulateFind($term, $field)
+            : MsGraph::get("users?$parameters");
 
         return $results['value'][0] ?? null;
     }
@@ -40,7 +38,9 @@ class EntraUser
             '$top' => $limit,
         ]);
 
-        $results = MsGraph::get("users?$parameters");
+        $results = self::emulatorIsEnabled() === true
+            ? self::emulateList($term, $field)
+            : MsGraph::get("users?$parameters");
 
         return $results['value'] ?? [];
     }
@@ -69,5 +69,40 @@ class EntraUser
         return $select === null
             ? config('entra.sync_attributes') ?? []
             : $select;
+    }
+
+    /** Emulation */
+    protected static function emulatorIsEnabled(): bool
+    {
+        return config('entra.emulator.enabled') === true;
+    }
+
+    protected static function emulateFind(string $term, string $field): array
+    {
+        $users = config('entra.emulator.users');
+        $results = [];
+
+        foreach ($users as $details) {
+            if ($details[$field] === $term) {
+                $results[] = $details;
+                break;
+            }
+        }
+
+        return Users::make($results);
+    }
+
+    protected static function emulateList(string $term, string $field): array
+    {
+        $users = config('entra.emulator.users');
+        $results = [];
+
+        foreach ($users as $details) {
+            if (str_starts_with($details[$field], $term) === true) {
+                $results[] = $details;
+            }
+        }
+
+        return Users::make($results);
     }
 }

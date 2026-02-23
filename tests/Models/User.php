@@ -5,9 +5,9 @@ namespace NetworkRailBusinessSystems\Entra\Tests\Models;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use NetworkRailBusinessSystems\Entra\AuthenticatesWithEntra;
 use NetworkRailBusinessSystems\Entra\EntraAuthenticatable;
 use NetworkRailBusinessSystems\Entra\Tests\Database\Factories\UserFactory;
+use NetworkRailBusinessSystems\Entra\Traits\AuthenticatesWithEntra;
 
 /**
  * @property string $azure_id

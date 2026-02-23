@@ -1,11 +1,11 @@
 <?php
 
-namespace NetworkRailBusinessSystems\Entra\Tests\Unit\AuthenticatesWithEntra;
+namespace NetworkRailBusinessSystems\Entra\Tests\Unit\Traits\AuthenticatesWithEntra;
 
 use NetworkRailBusinessSystems\Entra\Tests\Models\User;
 use NetworkRailBusinessSystems\Entra\Tests\TestCase;
 
-class EntraIdTest extends TestCase
+class EntraEmailTest extends TestCase
 {
     protected function setUp(): void
     {
@@ -16,12 +16,12 @@ class EntraIdTest extends TestCase
 
     public function testLoadsExisting(): void
     {
-        /** @var User $user */
+        /** @var \NetworkRailBusinessSystems\Entra\Tests\Models\User $user */
         $user = User::factory()->create();
 
         $this->assertEquals(
-            $user->id,
-            $user->entraId(),
+            $user->email,
+            $user->entraEmail(),
         );
     }
 }
