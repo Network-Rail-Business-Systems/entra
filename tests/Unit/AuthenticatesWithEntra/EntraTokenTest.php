@@ -3,7 +3,7 @@
 namespace NetworkRailBusinessSystems\Entra\Tests\Unit\AuthenticatesWithEntra;
 
 use NetworkRailBusinessSystems\Entra\EntraToken;
-use NetworkRailBusinessSystems\Entra\Tests\Data\User;
+use NetworkRailBusinessSystems\Entra\Tests\Models\User;
 use NetworkRailBusinessSystems\Entra\Tests\TestCase;
 
 class EntraTokenTest extends TestCase

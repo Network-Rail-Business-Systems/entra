@@ -1,6 +1,6 @@
 <?php
 
-namespace NetworkRailBusinessSystems\Entra\Tests\Data;
+namespace NetworkRailBusinessSystems\Entra\Tests\Models;
 
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

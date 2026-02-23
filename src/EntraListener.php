@@ -11,7 +11,7 @@ class EntraListener
 {
     public function handle(NewMicrosoft365SignInEvent $event): void
     {
-        $details = $this->formatDetails($event->token['info']);
+        $details = $event->token['info'];
         $model = $this->syncModel($details);
 
         $token = new MsGraph();
@@ -26,20 +26,11 @@ class EntraListener
         Auth::login($model);
     }
 
-    protected function formatDetails(array $details): array
-    {
-        $details['businessPhones'] = $details['businessPhones'][0] ?? null;
-
-        $index = strpos($details['userPrincipalName'], '@');
-        $details['userPrincipalName'] = substr($details['userPrincipalName'], 0, $index);
-
-        return $details;
-    }
-
     protected function syncModel(array $details): EntraAuthenticatable
     {
         /** @var class-string<EntraAuthenticatable> $modelClass */
         $modelClass = config('entra.user_model');
+        $details = $modelClass::formatEntraDetails($details);
 
         /** @var EntraAuthenticatable|Model $model */
         $model = $modelClass::getEntraModel($details);

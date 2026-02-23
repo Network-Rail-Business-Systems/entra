@@ -6,7 +6,7 @@ use Dcblogdev\MsGraph\Events\NewMicrosoft365SignInEvent;
 use Illuminate\Support\Facades\Auth;
 use NetworkRailBusinessSystems\Entra\EntraListener;
 use NetworkRailBusinessSystems\Entra\Tests\Data\Token;
-use NetworkRailBusinessSystems\Entra\Tests\Data\User;
+use NetworkRailBusinessSystems\Entra\Tests\Models\User;
 use NetworkRailBusinessSystems\Entra\Tests\TestCase;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 

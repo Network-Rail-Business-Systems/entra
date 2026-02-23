@@ -2,7 +2,7 @@
 
 namespace NetworkRailBusinessSystems\Entra\Tests\Unit\AuthenticatesWithEntra;
 
-use NetworkRailBusinessSystems\Entra\Tests\Data\User;
+use NetworkRailBusinessSystems\Entra\Tests\Models\User;
 use NetworkRailBusinessSystems\Entra\Tests\TestCase;
 
 class EntraEmailTest extends TestCase
@@ -16,7 +16,7 @@ class EntraEmailTest extends TestCase
 
     public function testLoadsExisting(): void
     {
-        /** @var User $user */
+        /** @var \NetworkRailBusinessSystems\Entra\Tests\Models\User $user */
         $user = User::factory()->create();
 
         $this->assertEquals(

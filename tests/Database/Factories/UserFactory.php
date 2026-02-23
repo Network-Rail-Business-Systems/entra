@@ -3,7 +3,7 @@
 namespace NetworkRailBusinessSystems\Entra\Tests\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use NetworkRailBusinessSystems\Entra\Tests\Data\User;
+use NetworkRailBusinessSystems\Entra\Tests\Models\User;
 
 class UserFactory extends Factory
 {

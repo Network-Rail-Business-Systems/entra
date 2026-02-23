@@ -16,15 +16,30 @@ trait AuthenticatesWithEntra
 {
     public static function getEntraModel(array $details): self
     {
-        return self::query()
+        /** @var EntraAuthenticatable $model */
+        $model = self::query()
             ->where('azure_id', '=', $details['id'])
             ->orWhere('email', '=', $details['mail'])
             ->firstOrNew();
+
+        return $model;
+    }
+
+    public static function formatEntraDetails(array $details): array
+    {
+        foreach ($details as $key => $value) {
+            if (is_array($value) === true) {
+                $details[$key] = $value[0] ?? null;
+            }
+        }
+
+        return $details;
     }
 
     public function syncEntraDetails(array $details): self
     {
         $attributes = config('entra.sync_attributes');
+        $details = static::formatEntraDetails($details);
 
         foreach ($attributes as $azureKey => $laravelKey) {
             $this->$laravelKey = $details[$azureKey];

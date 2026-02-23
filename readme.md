@@ -91,17 +91,55 @@ The `EntraServiceProvider` automatically registers the relevant event listeners 
 
 You can use the `Laravel Microsoft Graph` library as normal.
 
-### Entra helper
+Entra queries on routes outside of the `MsGraphAuthenticated` middleware must connect to Entra first, otherwise the request will hit a 302 redirect and fail.
 
-#### Entra::findGroup()
+### MsGraph
 
-#### Entra::findGroups()
+A drop-in alias for the `MsGraph` facade has been provided which adds docblocks for IDE support.
 
-#### Entra::findUser()
+### EntraGroup
 
-#### Entra::findUsers()
+#### Find
 
-#### Entra::importUser()
+#### List
+
+### EntraUser
+
+#### Find
+
+Search for and return a specific user.
+
+| Parameter | Type   | Default                       | Usage                                  |
+|-----------|--------|-------------------------------|----------------------------------------|
+| $term     | string |                               | A unique string to find the user by    |
+| $field    | string | mail                          | Which field to look for the `$term` in |
+| $select   | ?array | config(entra.sync_attributes) | Which fields to return                 |
+| :returns  | ?array |                               | The user as an array, or null          |
+
+#### List
+
+Search for users which start with a term.
+
+| Parameter | Type   | Default                       | Usage                                  |
+|-----------|--------|-------------------------------|----------------------------------------|
+| $term     | string |                               | A unique string to find the user by    |
+| $field    | string | mail                          | Which field to look for the `$term` in |
+| $limit    | int    | 10                            | How many results to show               |
+| $select   | ?array | config(entra.sync_attributes) | Which fields to return                 |
+| :returns  | array  |                               | An array of users                      |
+
+#### Import
+
+Search for and import a specific user to the database.
+
+If the user already exists they will be updated.
+
+| Parameter | Type                  | Default                       | Usage                                  |
+|-----------|-----------------------|-------------------------------|----------------------------------------|
+| $term     | string                |                               | A unique string to find the user by    |
+| $field    | string                | mail                          | Which field to look for the `$term` in |
+| $select   | ?array                | config(entra.sync_attributes) | Which fields to return                 |
+| :returns  | ?EntraAuthenticatable |                               | The user model, or null                |
 
 ### Rules
 
@@ -115,9 +153,9 @@ Ensure that the given User exists in Entra.
 
 ### Emulator
 
-#### Entra::emulate()
+#### Configuration
 
-#### Setting up emulated users
+#### Models
 
 ### Signing in and out
 
@@ -138,6 +176,13 @@ Users can logout by calling the `logout` route, which will take them to the Entr
 ## Sample Entra responses
 
 Sample responses are provided in the `tests/Data` directory.
+
+## Roadmap
+
+* Add 302 handler to MsGraph facade
+* Emulation
+* EntraGroup
+* Rules
 
 ## Help and support
 

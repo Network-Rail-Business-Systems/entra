@@ -2,7 +2,7 @@
 
 namespace NetworkRailBusinessSystems\Entra\Tests\Unit\AuthenticatesWithEntra;
 
-use NetworkRailBusinessSystems\Entra\Tests\Data\User;
+use NetworkRailBusinessSystems\Entra\Tests\Models\User;
 use NetworkRailBusinessSystems\Entra\Tests\TestCase;
 
 class SyncEntraModelTest extends TestCase
