@@ -205,15 +205,16 @@ Performing an `EntraUser::find` or `EntraUser::import` will return a matching us
 
 Performing an `EntraUser::list` will return a matching set of results from the list.
 
-## Sample Entra responses
+### Sample Entra responses
 
-Sample responses are provided in the `tests/Data` directory.
+Sample responses are provided on the relevant EntraModel.
 
 ## Roadmap
 
 * Add 302 handler to MsGraph facade
 * GroupEmulation
 * EntraGroup
+* Service account for jobs / CLI
 
 ## Help and support
 

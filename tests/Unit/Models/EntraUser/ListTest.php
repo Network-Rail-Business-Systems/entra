@@ -4,7 +4,6 @@ namespace NetworkRailBusinessSystems\Entra\Tests\Unit\Models\EntraUser;
 
 use NetworkRailBusinessSystems\Entra\Models\EntraUser;
 use NetworkRailBusinessSystems\Entra\MsGraph;
-use NetworkRailBusinessSystems\Entra\Tests\Data\Users;
 use NetworkRailBusinessSystems\Entra\Tests\TestCase;
 
 class ListTest extends TestCase
@@ -27,6 +26,8 @@ class ListTest extends TestCase
 
     public function testQueriesEntra(): void
     {
+        $results = EntraUser::emulateResults();
+
         $parameters = http_build_query([
             '$filter' => 'startsWith(mail, \'a@b.com\')',
             '$select' => [],
@@ -36,12 +37,10 @@ class ListTest extends TestCase
         MsGraph::partialMock()
             ->expects('get')
             ->with("users?$parameters")
-            ->andReturns(
-                Users::make(),
-            );
+            ->andReturns($results);
 
         $this->assertEquals(
-            Users::make()['value'],
+            $results['value'],
             EntraUser::list('a@b.com', select: []),
         );
     }

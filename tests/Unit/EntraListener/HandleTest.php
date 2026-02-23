@@ -5,7 +5,7 @@ namespace NetworkRailBusinessSystems\Entra\Tests\Unit\EntraListener;
 use Dcblogdev\MsGraph\Events\NewMicrosoft365SignInEvent;
 use Illuminate\Support\Facades\Auth;
 use NetworkRailBusinessSystems\Entra\EntraListener;
-use NetworkRailBusinessSystems\Entra\Tests\Data\Token;
+use NetworkRailBusinessSystems\Entra\Models\EntraToken;
 use NetworkRailBusinessSystems\Entra\Tests\Models\User;
 use NetworkRailBusinessSystems\Entra\Tests\TestCase;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -26,7 +26,7 @@ class HandleTest extends TestCase
 
         $this->useDatabase();
 
-        $this->token = Token::make();
+        $this->token = EntraToken::emulateResults();
         $this->event = new NewMicrosoft365SignInEvent($this->token);
 
         $this->listener = new EntraListener();

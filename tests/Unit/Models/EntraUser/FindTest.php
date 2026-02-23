@@ -4,7 +4,6 @@ namespace NetworkRailBusinessSystems\Entra\Tests\Unit\Models\EntraUser;
 
 use NetworkRailBusinessSystems\Entra\Models\EntraUser;
 use NetworkRailBusinessSystems\Entra\MsGraph;
-use NetworkRailBusinessSystems\Entra\Tests\Data\Users;
 use NetworkRailBusinessSystems\Entra\Tests\TestCase;
 
 class FindTest extends TestCase
@@ -21,6 +20,8 @@ class FindTest extends TestCase
 
     public function testQueriesEntra(): void
     {
+        $results = EntraUser::emulateResults();
+
         $parameters = http_build_query([
             '$filter' => 'mail eq \'a@b.com\'',
             '$select' => config('entra.sync_attributes'),
@@ -30,9 +31,7 @@ class FindTest extends TestCase
         MsGraph::partialMock()
             ->expects('get')
             ->with("users?$parameters")
-            ->andReturns(
-                Users::make(),
-            );
+            ->andReturns($results);
 
         $this->assertEquals(
             'Joe Bloggs',
