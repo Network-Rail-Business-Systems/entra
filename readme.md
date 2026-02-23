@@ -149,13 +149,23 @@ If the user already exists they will be updated.
 
 ### Rules
 
-#### UserExistsInDatabase
-
-Ensure that the given User exists in the local database.
-
 #### UserExistsInEntra
 
 Ensure that the given User exists in Entra.
+
+```php
+// Request data
+[
+    'email' => 'joe.bloggs@networkrail.co.uk',
+];
+
+// FormRequest rules()
+'email' => [
+    new UserExistsInEntra('mail'),
+];
+```
+
+You may provide the field to match the value to as the first parameter of the Rule.
 
 ### Emulator
 
@@ -206,7 +216,6 @@ Sample responses are provided in the `tests/Data` directory.
 * Add 302 handler to MsGraph facade
 * GroupEmulation
 * EntraGroup
-* Rules
 
 ## Help and support
 

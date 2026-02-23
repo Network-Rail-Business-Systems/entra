@@ -83,7 +83,10 @@ class EntraUser
         $results = [];
 
         foreach ($users as $details) {
-            if ($details[$field] === $term) {
+            if (
+                array_key_exists($field, $details) === true
+                && $details[$field] === $term
+            ) {
                 $results[] = $details;
                 break;
             }
