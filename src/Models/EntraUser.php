@@ -5,7 +5,7 @@ namespace NetworkRailBusinessSystems\Entra\Models;
 use NetworkRailBusinessSystems\Entra\EntraAuthenticatable;
 use NetworkRailBusinessSystems\Entra\MsGraph;
 
-class EntraUser
+class EntraUser extends EntraModel
 {
     public static function get(
         string $term,
@@ -19,7 +19,7 @@ class EntraUser
         ]);
 
         $results = self::emulatorIsEnabled() === true
-            ? self::emulateFind($term, $field)
+            ? self::emulateGet($term, $field)
             : MsGraph::get("users?$parameters");
 
         return $results['value'][0] ?? null;
@@ -63,6 +63,7 @@ class EntraUser
         return $user;
     }
 
+    // Formatting
     protected static function formatSelect(?array $select): string
     {
         $select = $select === null
@@ -72,27 +73,11 @@ class EntraUser
         return implode(',', $select);
     }
 
-    /** Emulation */
+    // Emulation
     public static function emulateResults(?array $results = null): array
     {
         if ($results === null) {
-            $results = [
-                [
-                    'businessPhones' => [
-                        '01234567890',
-                    ],
-                    'displayName' => 'Joe Bloggs',
-                    'givenName' => 'Joe',
-                    'jobTitle' => 'Business Systems Developer',
-                    'mail' => 'Joe.Bloggs@networkrail.co.uk',
-                    'mobilePhone' => '01234567890',
-                    'officeLocation' => 'Some Office',
-                    'preferredLanguage' => null,
-                    'surname' => 'Bloggs',
-                    'userPrincipalName' => 'JBloggs2@networkrail.co.uk',
-                    'id' => '123ab4c5-6789-01de-f2g3-45678hijk9lm',
-                ],
-            ];
+            $results = [self::emulatorExample()];
         } else {
             foreach ($results as $index => $result) {
                 if (
@@ -113,40 +98,27 @@ class EntraUser
         ];
     }
 
-    protected static function emulatorIsEnabled(): bool
+    protected static function emulatorExample(): array
     {
-        return config('entra.emulator.enabled') === true;
+        return [
+            'businessPhones' => [
+                '01234567890',
+            ],
+            'displayName' => 'Joe Bloggs',
+            'givenName' => 'Joe',
+            'jobTitle' => 'Business Systems Developer',
+            'mail' => 'Joe.Bloggs@networkrail.co.uk',
+            'mobilePhone' => '01234567890',
+            'officeLocation' => 'Some Office',
+            'preferredLanguage' => null,
+            'surname' => 'Bloggs',
+            'userPrincipalName' => 'JBloggs2@networkrail.co.uk',
+            'id' => '123ab4c5-6789-01de-f2g3-45678hijk9lm',
+        ];
     }
 
-    protected static function emulateFind(string $term, string $field): array
+    protected static function emulatorConfig(): array
     {
-        $users = config('entra.emulator.users');
-        $results = [];
-
-        foreach ($users as $details) {
-            if (
-                array_key_exists($field, $details) === true
-                && $details[$field] === $term
-            ) {
-                $results[] = $details;
-                break;
-            }
-        }
-
-        return self::emulateResults($results);
-    }
-
-    protected static function emulateList(string $term, string $field): array
-    {
-        $users = config('entra.emulator.users');
-        $results = [];
-
-        foreach ($users as $details) {
-            if (str_starts_with($details[$field], $term) === true) {
-                $results[] = $details;
-            }
-        }
-
-        return self::emulateResults($results);
+        return config('entra.emulator.users');
     }
 }

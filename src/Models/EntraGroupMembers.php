@@ -4,51 +4,109 @@ namespace NetworkRailBusinessSystems\Entra\Models;
 
 use NetworkRailBusinessSystems\Entra\MsGraph;
 
-class EntraGroupMembers
+class EntraGroupMembers extends EntraModel
 {
-    public static function list(
+    public const string NEXT_LINK = '@odata.nextLink';
+
+    public static function get(
         string $term,
-        string $field,
+        string $field = 'mail',
         array $select = ['mail'],
     ): ?array {
-        // Find, get ID, list members
+        $group = EntraGroup::get($term, $field, ['id']);
+
+        if ($group === null) {
+            return null;
+        }
 
         $parameters = http_build_query([
-            '$select' => 'mail',
+            '$select' => self::formatSelect($select),
         ]);
 
-        $results = MsGraph::get("groups/$id/members?$parameters");
-        dd($results);
-        return $results['value'] ?? [];
+        $id = $group['id'];
 
-        // TODO Step over next links to get all results
-        return [];
+        $results = self::emulatorIsEnabled() === true
+            ? self::emulateGet($term, $field, true)
+            : MsGraph::get("groups/$id/members?$parameters");
+
+        $members = $results['value'];
+
+        while (array_key_exists(self::NEXT_LINK, $results) === true) {
+            $results = self::emulatorIsEnabled() === true
+                ? self::emulateGet($term, $field)
+                : MsGraph::get($results[self::NEXT_LINK]);
+
+            $members = array_merge(
+                $members,
+                $results['value'],
+            );
+        }
+
+        return $members;
     }
 
-    /** Emulation */
-    public static function emulateMemberResults(): array
+    // Emulation
+    public static function emulateResults(
+        ?array $results = null,
+        bool $nextLink = false,
+    ): array {
+        if ($results === null) {
+            $results = [self::emulatorExample()];
+        }
+
+        $result = [
+            '@odata.context' => 'https://graph.microsoft.com/v1.0/$metadata#directoryObjects',
+            'value' => $results,
+        ];
+
+        if ($nextLink === true) {
+            $result['@odata.nextLink'] = 'https://graph.microsoft.com/v1.0/groups/123ab4c5-6789-01de-f2g3-45678hijk9lm/members';
+        }
+
+        return $result;
+    }
+
+    protected static function emulatorExample(): array
     {
         return [
-            '@odata.context' => 'https://graph.microsoft.com/v1.0/$metadata#directoryObjects',
-            '@odata.nextLink' => 'https://graph.microsoft.com/v1.0/groups/123ab4c5-6789-01de-f2g3-45678hijk9lm/members', // In princple, send next-link in get to get next page
-            'value' => [
-                [
-                    '@odata.type' => '#microsoft.graph.user',
-                    'id' => '123ab4c5-6789-01de-f2g3-45678hijk9lm',
-                    'businessPhones' => [
-                        '01234567890',
-                    ],
-                    'displayName' => 'Joe Bloggs',
-                    'givenName' => 'Joe',
-                    'jobTitle' => 'Business Systems Developer',
-                    'mail' => 'Joe.Bloggs@networkrail.co.uk',
-                    'mobilePhone' => '01234567890',
-                    'officeLocation' => 'Some Office',
-                    'preferredLanguage' => null,
-                    'surname' => 'Bloggs',
-                    'userPrincipalName' => 'JBloggs2@networkrail.co.uk',
-                ],
+            '@odata.type' => '#microsoft.graph.user',
+            'id' => '123ab4c5-6789-01de-f2g3-45678hijk9lm',
+            'businessPhones' => [
+                '01234567890',
             ],
+            'displayName' => 'Joe Bloggs',
+            'givenName' => 'Joe',
+            'jobTitle' => 'Business Systems Developer',
+            'mail' => 'Joe.Bloggs@networkrail.co.uk',
+            'mobilePhone' => '01234567890',
+            'officeLocation' => 'Some Office',
+            'preferredLanguage' => null,
+            'surname' => 'Bloggs',
+            'userPrincipalName' => 'JBloggs2@networkrail.co.uk',
         ];
+    }
+
+    protected static function emulatorConfig(): array
+    {
+        return config('entra.emulator.groups');
+    }
+
+    protected static function emulateGet(
+        string $term,
+        string $field,
+        bool $nextLink = false,
+    ): array {
+        $results = [];
+        $group = parent::emulateGet($term, $field)['value'][0];
+
+        foreach ($group['members'] as $member) {
+            $results[] = [
+                '@odata.type' => '#microsoft.graph.user',
+                'id' => '123ab4c5-6789-01de-f2g3-45678hijk9lm',
+                'mail' => $member,
+            ];
+        }
+
+        return self::emulateResults($results, $nextLink);
     }
 }

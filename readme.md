@@ -125,15 +125,39 @@ A drop-in alias for the `MsGraph` facade has been provided which adds docblocks 
 
 Search for and return a specific group.
 
+| Parameter | Type   | Default | Usage                                  |
+|-----------|--------|---------|----------------------------------------|
+| $term     | string |         | A unique string to find the group by   |
+| $field    | string | mail    | Which field to look for the `$term` in |
+| $select   | ?array | []      | Which fields to return                 |
+| :returns  | ?array |         | The group as an array, or null         |
+
 #### List
 
 Search for groups which start with a term.
+
+| Parameter | Type   | Default | Usage                                  |
+|-----------|--------|---------|----------------------------------------|
+| $term     | string |         | A unique string to find the group by   |
+| $field    | string | mail    | Which field to look for the `$term` in |
+| $limit    | int    | 10      | How many results to show               |
+| $select   | ?array | []      | Which fields to return                 |
+| :returns  | array  |         | An array of groups                     |
 
 ### EntraGroupMembers
 
 #### Get
 
 Retrieve a list of users for a group by the group's ID.
+
+Entra will be polled until all of the group's users have been loaded.
+
+| Parameter | Type   | Default  | Usage                                    |
+|-----------|--------|----------|------------------------------------------|
+| $term     | string |          | A unique string to find the group by     |
+| $field    | string | mail     | Which field to look for the `$term` in   |
+| $select   | ?array | ['mail'] | Which fields to return                   |
+| :returns  | ?array |          | The group's members as an array, or null |
 
 ### EntraUser
 
@@ -207,9 +231,15 @@ You may also use the `AssertsEntra` trait on your base `TestCase` class to make 
 
 Emulation does not support signing in or out.
 
-### EntraGroup
+### EntraGroup and EntraGroupMembers
 
-### EntraGroupMembers
+Defining a list of `groups` on the `entra.emulator.groups` key will allow you to create a custom list of groups with members which you can re-use.
+
+Performing an `EntraGroup::get` will return a matching group from the list.
+
+Performing an `EntraGroup::list` will return a matching set of results from the list.
+
+Performing an `EntraGroupMembers::get` will return a matching group's members from the list.
 
 ### EntraUser
 
@@ -226,7 +256,7 @@ Sample responses are provided on the relevant EntraModel.
 ## Roadmap
 
 * Add 302 handler to MsGraph facade
-* Service account for jobs / CLI
+* Managed Identities for jobs / CLI
 
 ## Help and support
 

@@ -35,6 +35,28 @@ return [
         'enabled' => false,
 
         /**
+         * Which groups are available via the emulator
+         * Each group should be an array of attributes which (at a minimum) have an ID, a mail, and member's mails
+         */
+        'groups' => [
+            [
+                'id' => '1',
+                'mail' => 'fellowship@middle-earth.com',
+                'members' => [
+                    'gandalf.stormcrow@networkrail.co.uk',
+                    'frodo.baggins@networkrail.co.uk',
+                    'samwise.gamgee@networkrail.co.uk',
+                    'aragorn.elessar@networkrail.co.uk',
+                    'legolas.thranduil@networkrail.co.uk',
+                    'gimli.gloin@networkrail.co.uk',
+                    'boromir.denethor@networkrail.co.uk',
+                    'merry.brandybuck@networkrail.co.uk',
+                    'peregrin.took@networkrail.co.uk',
+                ],
+            ],
+        ],
+
+        /**
          * Which Users are available via the emulator
          * Each user should be an array of attributes which (at a minimum) match the sync_attributes
          */
