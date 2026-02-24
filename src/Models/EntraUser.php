@@ -67,7 +67,9 @@ class EntraUser extends EntraModel
     protected static function formatSelect(?array $select): string
     {
         $select = $select === null
-            ? config('entra.sync_attributes') ?? []
+            ? array_keys(
+                config('entra.sync_attributes') ?? [],
+            )
             : $select;
 
         return implode(',', $select);
