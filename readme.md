@@ -97,7 +97,7 @@ The `EntraServiceProvider` automatically registers the relevant event listeners 
 
 ### Automatic
 
-If you wrap all of your system's endpoints in the `MsGraphAuthenticaed` middleware, Users will be automatically kicked to the Entra login page.
+If you wrap all of your system's endpoints in the `MsGraphAuthenticated` middleware, Users will be automatically kicked to the Entra login page.
 
 Should they become signed out for whatever reason, they will be kicked to the Entra login screen.
 

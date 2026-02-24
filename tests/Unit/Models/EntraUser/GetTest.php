@@ -24,7 +24,12 @@ class GetTest extends TestCase
 
         $parameters = http_build_query([
             '$filter' => 'mail eq \'a@b.com\'',
-            '$select' => implode(',', config('entra.sync_attributes')),
+            '$select' => implode(
+                ',',
+                array_keys(
+                    config('entra.sync_attributes'),
+                ),
+            ),
             '$top' => 1,
         ]);
 
