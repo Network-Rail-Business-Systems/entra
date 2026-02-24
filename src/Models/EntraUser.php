@@ -7,7 +7,7 @@ use NetworkRailBusinessSystems\Entra\MsGraph;
 
 class EntraUser
 {
-    public static function find(
+    public static function get(
         string $term,
         string $field = 'mail',
         ?array $select = null,
@@ -49,7 +49,7 @@ class EntraUser
         string $field = 'mail',
         ?array $select = null,
     ): ?EntraAuthenticatable {
-        $details = self::find($term, $field, $select);
+        $details = self::get($term, $field, $select);
 
         if ($details === null) {
             return null;
@@ -63,11 +63,13 @@ class EntraUser
         return $user;
     }
 
-    protected static function formatSelect(?array $select): array
+    protected static function formatSelect(?array $select): string
     {
-        return $select === null
+        $select = $select === null
             ? config('entra.sync_attributes') ?? []
             : $select;
+
+        return implode(',', $select);
     }
 
     /** Emulation */

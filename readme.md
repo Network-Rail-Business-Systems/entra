@@ -121,13 +121,23 @@ A drop-in alias for the `MsGraph` facade has been provided which adds docblocks 
 
 ### EntraGroup
 
-#### Find
+#### Get
+
+Search for and return a specific group.
 
 #### List
 
+Search for groups which start with a term.
+
+### EntraGroupMembers
+
+#### Get
+
+Retrieve a list of users for a group by the group's ID.
+
 ### EntraUser
 
-#### Find
+#### Get
 
 Search for and return a specific user.
 
@@ -197,11 +207,15 @@ You may also use the `AssertsEntra` trait on your base `TestCase` class to make 
 
 Emulation does not support signing in or out.
 
+### EntraGroup
+
+### EntraGroupMembers
+
 ### EntraUser
 
 Defining a list of `users` on the `entra.emulator.users` key will allow you to create a custom list of users which you can re-use.
 
-Performing an `EntraUser::find` or `EntraUser::import` will return a matching user from the list.
+Performing an `EntraUser::get` or `EntraUser::import` will return a matching user from the list.
 
 Performing an `EntraUser::list` will return a matching set of results from the list.
 
@@ -212,8 +226,6 @@ Sample responses are provided on the relevant EntraModel.
 ## Roadmap
 
 * Add 302 handler to MsGraph facade
-* GroupEmulation
-* EntraGroup
 * Service account for jobs / CLI
 
 ## Help and support

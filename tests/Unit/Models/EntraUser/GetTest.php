@@ -6,7 +6,7 @@ use NetworkRailBusinessSystems\Entra\Models\EntraUser;
 use NetworkRailBusinessSystems\Entra\MsGraph;
 use NetworkRailBusinessSystems\Entra\Tests\TestCase;
 
-class FindTest extends TestCase
+class GetTest extends TestCase
 {
     public function testEmulates(): void
     {
@@ -14,7 +14,7 @@ class FindTest extends TestCase
 
         $this->assertEquals(
             'Gandalf Stormcrow',
-            EntraUser::find('gandalf.stormcrow@networkrail.co.uk')['displayName'],
+            EntraUser::get('gandalf.stormcrow@networkrail.co.uk')['displayName'],
         );
     }
 
@@ -24,7 +24,7 @@ class FindTest extends TestCase
 
         $parameters = http_build_query([
             '$filter' => 'mail eq \'a@b.com\'',
-            '$select' => config('entra.sync_attributes'),
+            '$select' => implode(',', config('entra.sync_attributes')),
             '$top' => 1,
         ]);
 
@@ -35,7 +35,7 @@ class FindTest extends TestCase
 
         $this->assertEquals(
             'Joe Bloggs',
-            EntraUser::find('a@b.com')['displayName'],
+            EntraUser::get('a@b.com')['displayName'],
         );
     }
 }

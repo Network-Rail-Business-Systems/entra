@@ -29,7 +29,7 @@ class UserExistsInEntra implements ValidationRule
 
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if (EntraUser::find($value, $this->field) === null) {
+        if (EntraUser::get($value, $this->field) === null) {
             $fail("Enter the $this->formattedField of a person with a Network Rail account");
         }
     }

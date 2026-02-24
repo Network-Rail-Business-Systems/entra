@@ -30,7 +30,7 @@ class ListTest extends TestCase
 
         $parameters = http_build_query([
             '$filter' => 'startsWith(mail, \'a@b.com\')',
-            '$select' => [],
+            '$select' => '',
             '$top' => 10,
         ]);
 
