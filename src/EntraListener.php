@@ -5,7 +5,9 @@ namespace NetworkRailBusinessSystems\Entra;
 use Dcblogdev\MsGraph\Events\NewMicrosoft365SignInEvent;
 use Dcblogdev\MsGraph\MsGraph;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 
 class EntraListener
 {
@@ -24,6 +26,10 @@ class EntraListener
         );
 
         Auth::login($model);
+
+        throw new HttpResponseException(
+            Redirect::intended(),
+        );
     }
 
     protected function syncModel(array $details): EntraAuthenticatable
