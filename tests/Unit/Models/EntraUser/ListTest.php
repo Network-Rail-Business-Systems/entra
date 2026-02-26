@@ -2,12 +2,20 @@
 
 namespace NetworkRailBusinessSystems\Entra\Tests\Unit\Models\EntraUser;
 
+use NetworkRailBusinessSystems\Entra\Facades\MsGraph;
+use NetworkRailBusinessSystems\Entra\Facades\MsGraphAdmin;
 use NetworkRailBusinessSystems\Entra\Models\EntraUser;
-use NetworkRailBusinessSystems\Entra\MsGraph;
 use NetworkRailBusinessSystems\Entra\Tests\TestCase;
 
 class ListTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->useDatabase();
+    }
+
     public function testEmulates(): void
     {
         $this->useEntraEmulator();
@@ -24,7 +32,19 @@ class ListTest extends TestCase
         );
     }
 
-    public function testQueriesEntra(): void
+    public function testQueriesAsUser(): void
+    {
+        $this->signIn();
+        $this->check(MsGraph::class);
+    }
+
+    public function testQueriesAsAdmin(): void
+    {
+        $this->check(MsGraphAdmin::class);
+    }
+
+    /** @param class-string<MsGraph|MsGraphAdmin> $msGraph */
+    protected function check(string $msGraph): void
     {
         $results = EntraUser::emulateResults();
 
@@ -34,7 +54,7 @@ class ListTest extends TestCase
             '$top' => 10,
         ]);
 
-        MsGraph::partialMock()
+        $msGraph::partialMock()
             ->expects('get')
             ->with("users?$parameters")
             ->andReturns($results);

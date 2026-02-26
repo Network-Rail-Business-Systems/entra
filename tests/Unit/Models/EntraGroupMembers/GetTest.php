@@ -2,13 +2,21 @@
 
 namespace NetworkRailBusinessSystems\Entra\Tests\Unit\Models\EntraGroupMembers;
 
+use NetworkRailBusinessSystems\Entra\Facades\MsGraph;
+use NetworkRailBusinessSystems\Entra\Facades\MsGraphAdmin;
 use NetworkRailBusinessSystems\Entra\Models\EntraGroup;
 use NetworkRailBusinessSystems\Entra\Models\EntraGroupMembers;
-use NetworkRailBusinessSystems\Entra\MsGraph;
 use NetworkRailBusinessSystems\Entra\Tests\TestCase;
 
 class GetTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->useDatabase();
+    }
+
     public function testNull(): void
     {
         $this->useEntraEmulator();
@@ -28,7 +36,19 @@ class GetTest extends TestCase
         );
     }
 
-    public function testQueriesEntra(): void
+    public function testQueriesAsUser(): void
+    {
+        $this->signIn();
+        $this->check(MsGraph::class);
+    }
+
+    public function testQueriesAsAdmin(): void
+    {
+        $this->check(MsGraphAdmin::class);
+    }
+
+    /** @param class-string<MsGraph|MsGraphAdmin> $msGraph */
+    protected function check(string $msGraph): void
     {
         $groupResults = EntraGroup::emulateResults();
         $memberNextResults = EntraGroupMembers::emulateResults(nextLink: true);
@@ -40,7 +60,7 @@ class GetTest extends TestCase
             '$top' => 1,
         ]);
 
-        MsGraph::partialMock()
+        $msGraph::partialMock()
             ->expects('get')
             ->with("groups?$groupParameters")
             ->andReturns($groupResults);
@@ -49,12 +69,12 @@ class GetTest extends TestCase
             '$select' => implode(',', ['mail']),
         ]);
 
-        MsGraph::partialMock()
+        $msGraph::partialMock()
             ->expects('get')
             ->with("groups/123ab4c5-6789-01de-f2g3-45678hijk9lm/members?$memberParameters")
             ->andReturns($memberNextResults);
 
-        MsGraph::partialMock()
+        $msGraph::partialMock()
             ->expects('get')
             ->with('https://graph.microsoft.com/v1.0/groups/123ab4c5-6789-01de-f2g3-45678hijk9lm/members')
             ->andReturns($memberEndResults);

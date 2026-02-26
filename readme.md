@@ -115,9 +115,23 @@ You can use the `Laravel Microsoft Graph` library as normal.
 
 Entra queries on routes outside of the `MsGraphAuthenticated` middleware must connect to Entra first, otherwise the request will hit a 302 redirect and fail.
 
+### Service Accounts
+
+Calling `MsGraph` will access Entra using the currently signed-in user's credentials.
+
+Calling `MsGraphAdmin` will access Entra as the application, without a signed-in user.
+
+`MsGraphAdmin` should be used for any calls to Entra which are performed in the background, such as queues, jobs, and commands.
+
+Any calls using the models provided by this library will automatically fall back to the `MsGraphAdmin` account if there is no signed-in user.
+
 ### MsGraph
 
 A drop-in alias for the `MsGraph` facade has been provided which adds docblocks for IDE support.
+
+### MsGraphAdmin
+
+A drop-in alias for the `MsGraphAdmin` facade has been provided which adds docblocks for IDE support.
 
 ### EntraGroup
 
