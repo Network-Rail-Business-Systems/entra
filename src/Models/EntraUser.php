@@ -2,8 +2,10 @@
 
 namespace NetworkRailBusinessSystems\Entra\Models;
 
+use Illuminate\Support\Facades\Auth;
 use NetworkRailBusinessSystems\Entra\EntraAuthenticatable;
-use NetworkRailBusinessSystems\Entra\MsGraph;
+use NetworkRailBusinessSystems\Entra\Facades\MsGraph;
+use NetworkRailBusinessSystems\Entra\Facades\MsGraphAdmin;
 
 class EntraUser extends EntraModel
 {
@@ -18,9 +20,11 @@ class EntraUser extends EntraModel
             '$top' => 1,
         ]);
 
-        $results = self::emulatorIsEnabled() === true
-            ? self::emulateGet($term, $field)
-            : MsGraph::get("users?$parameters");
+        $results = match (true) {
+            self::emulatorIsEnabled() => self::emulateGet($term, $field),
+            Auth::check() => MsGraph::get("users?$parameters"),
+            default => MsGraphAdmin::get("users?$parameters"),
+        };
 
         return $results['value'][0] ?? null;
     }
@@ -37,9 +41,11 @@ class EntraUser extends EntraModel
             '$top' => $limit,
         ]);
 
-        $results = self::emulatorIsEnabled() === true
-            ? self::emulateList($term, $field)
-            : MsGraph::get("users?$parameters");
+        $results = match (true) {
+            self::emulatorIsEnabled() => self::emulateList($term, $field),
+            Auth::check() => MsGraph::get("users?$parameters"),
+            default => MsGraphAdmin::get("users?$parameters"),
+        };
 
         return $results['value'] ?? [];
     }

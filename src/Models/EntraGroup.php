@@ -2,7 +2,9 @@
 
 namespace NetworkRailBusinessSystems\Entra\Models;
 
-use NetworkRailBusinessSystems\Entra\MsGraph;
+use Illuminate\Support\Facades\Auth;
+use NetworkRailBusinessSystems\Entra\Facades\MsGraph;
+use NetworkRailBusinessSystems\Entra\Facades\MsGraphAdmin;
 
 class EntraGroup extends EntraModel
 {
@@ -17,9 +19,11 @@ class EntraGroup extends EntraModel
             '$top' => 1,
         ]);
 
-        $results = self::emulatorIsEnabled() === true
-            ? self::emulateGet($term, $field)
-            : MsGraph::get("groups?$parameters");
+        $results = match (true) {
+            self::emulatorIsEnabled() => self::emulateGet($term, $field),
+            Auth::check() => MsGraph::get("groups?$parameters"),
+            default => MsGraphAdmin::get("groups?$parameters"),
+        };
 
         return $results['value'][0] ?? null;
     }
@@ -36,9 +40,11 @@ class EntraGroup extends EntraModel
             '$top' => $limit,
         ]);
 
-        $results = self::emulatorIsEnabled() === true
-            ? self::emulateList($term, $field)
-            : MsGraph::get("groups?$parameters");
+        $results = match (true) {
+            self::emulatorIsEnabled() => self::emulateList($term, $field),
+            Auth::check() => MsGraph::get("groups?$parameters"),
+            default => MsGraphAdmin::get("groups?$parameters"),
+        };
 
         return $results['value'] ?? [];
     }

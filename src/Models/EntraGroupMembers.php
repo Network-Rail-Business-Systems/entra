@@ -2,7 +2,9 @@
 
 namespace NetworkRailBusinessSystems\Entra\Models;
 
-use NetworkRailBusinessSystems\Entra\MsGraph;
+use Illuminate\Support\Facades\Auth;
+use NetworkRailBusinessSystems\Entra\Facades\MsGraph;
+use NetworkRailBusinessSystems\Entra\Facades\MsGraphAdmin;
 
 class EntraGroupMembers extends EntraModel
 {
@@ -24,17 +26,22 @@ class EntraGroupMembers extends EntraModel
         ]);
 
         $id = $group['id'];
+        $url = "groups/$id/members?$parameters";
 
-        $results = self::emulatorIsEnabled() === true
-            ? self::emulateGet($term, $field, true)
-            : MsGraph::get("groups/$id/members?$parameters");
+        $results = match (true) {
+            self::emulatorIsEnabled() => self::emulateGet($term, $field, true),
+            Auth::check() => MsGraph::get($url),
+            default => MsGraphAdmin::get($url),
+        };
 
         $members = $results['value'];
 
         while (array_key_exists(self::NEXT_LINK, $results) === true) {
-            $results = self::emulatorIsEnabled() === true
-                ? self::emulateGet($term, $field)
-                : MsGraph::get($results[self::NEXT_LINK]);
+            $results = match (true) {
+                self::emulatorIsEnabled() => self::emulateGet($term, $field),
+                Auth::check() => MsGraph::get($results[self::NEXT_LINK]),
+                default => MsGraphAdmin::get($results[self::NEXT_LINK]),
+            };
 
             $members = array_merge(
                 $members,

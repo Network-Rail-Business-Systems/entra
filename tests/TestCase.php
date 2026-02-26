@@ -4,6 +4,7 @@ namespace NetworkRailBusinessSystems\Entra\Tests;
 
 use AnthonyEdmonds\LaravelTestingTraits\AssertsRelationships;
 use AnthonyEdmonds\LaravelTestingTraits\AssertsValidationRules;
+use AnthonyEdmonds\LaravelTestingTraits\SignsInUsers;
 use Dcblogdev\MsGraph\MsGraphServiceProvider;
 use Illuminate\Foundation\Testing\WithFaker;
 use NetworkRailBusinessSystems\Entra\EntraServiceProvider;
@@ -17,6 +18,7 @@ abstract class TestCase extends BaseTestCase
     use WithFaker;
     use AssertsRelationships;
     use AssertsValidationRules;
+    use SignsInUsers;
 
     protected function setUp(): void
     {
@@ -24,6 +26,7 @@ abstract class TestCase extends BaseTestCase
 
         $this->withoutVite();
 
+        config()->set('testing-traits.user_model', User::class);
         config()->set('entra.user_model', User::class);
         config()->set('msgraph.dbConnection', 'testing');
     }
