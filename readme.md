@@ -270,8 +270,6 @@ Sample responses are provided on the relevant EntraModel.
 ## Roadmap
 
 * Add 302 handler to MsGraph facade
-* Managed Identities for jobs / CLI
-* Specific connect exception handlers
 
 ## Help and support
 
