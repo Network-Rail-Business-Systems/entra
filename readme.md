@@ -270,7 +270,6 @@ Sample responses are provided on the relevant EntraModel.
 ## Roadmap
 
 * Add 302 handler to MsGraph facade
-* Specific connect exception handlers
 
 ## Help and support
 
@@ -281,4 +280,3 @@ If you wish to contribute to this library, raise an issue before submitting a fo
 ## Licence
 
 Published under the MIT licence.
-
