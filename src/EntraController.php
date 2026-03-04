@@ -38,6 +38,7 @@ class EntraController extends Controller
                     'unsupported_grant_type' => "We were unable to sign you in due to a server configuration error; contact us for support quoting \"$code\"",
                     'invalid_grant' => 'We were unable to sign you in because your request has expired; go back and try again',
                     'temporarily_unavailable' => 'We were unable to sign you in because the servers are busy; try again later',
+                    'Only' => $exception->getMessage(),
                     default => 'We were unable to sign you in; try again later',
                 },
             );

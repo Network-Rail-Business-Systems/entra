@@ -74,6 +74,10 @@ class ConnectTest extends TestCase
                 'message' => 'We were unable to sign you in because the servers are busy; try again later',
             ],
             [
+                'code' => 'Only',
+                'message' => 'Only A101010: A very technical error message',
+            ],
+            [
                 'code' => 'goose_attack',
                 'message' => 'We were unable to sign you in; try again later',
             ],
