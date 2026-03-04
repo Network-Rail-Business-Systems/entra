@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use NetworkRailBusinessSystems\Entra\Exceptions\OnlyExistingUsersException;
 
 class EntraListener
 {
@@ -45,7 +46,7 @@ class EntraListener
             config('entra.create_users') === false
             && $model->exists === false
         ) {
-            abort(403, config('entra.messages.only_existing'));
+            throw new OnlyExistingUsersException();
         }
 
         return $model->syncEntraDetails($details);

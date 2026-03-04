@@ -2,13 +2,14 @@
 
 namespace NetworkRailBusinessSystems\Entra;
 
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
-use Exception;
 use ErrorException;
 use NetworkRailBusinessSystems\Entra\Facades\MsGraph;
+use Throwable;
 
 class EntraController extends Controller
 {
@@ -21,7 +22,9 @@ class EntraController extends Controller
 
         try {
             return MsGraph::connect();
-        } catch (Exception $exception) {
+        } catch (HttpResponseException $exception) {
+            throw $exception;
+        } catch (Throwable $exception) {
             $code = explode(
                 ' ',
                 $exception->getMessage(),
@@ -38,6 +41,7 @@ class EntraController extends Controller
                     'unsupported_grant_type' => "We were unable to sign you in due to a server configuration error; contact us for support quoting \"$code\"",
                     'invalid_grant' => 'We were unable to sign you in because your request has expired; go back and try again',
                     'temporarily_unavailable' => 'We were unable to sign you in because the servers are busy; try again later',
+                    'only_existing' => config('entra.messages.only_existing'),
                     default => 'We were unable to sign you in; try again later',
                 },
             );

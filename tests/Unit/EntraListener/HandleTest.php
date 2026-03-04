@@ -6,10 +6,10 @@ use Dcblogdev\MsGraph\Events\NewMicrosoft365SignInEvent;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\Auth;
 use NetworkRailBusinessSystems\Entra\EntraListener;
+use NetworkRailBusinessSystems\Entra\Exceptions\OnlyExistingUsersException;
 use NetworkRailBusinessSystems\Entra\Models\EntraToken;
 use NetworkRailBusinessSystems\Entra\Tests\Models\User;
 use NetworkRailBusinessSystems\Entra\Tests\TestCase;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class HandleTest extends TestCase
 {
@@ -55,16 +55,14 @@ class HandleTest extends TestCase
 
         $this->assertEquals(
             $this->user->id,
-            Auth::user()->id,
+            Auth::id(),
         );
     }
 
     public function testBlocksCreate(): void
     {
-        $this->expectException(HttpException::class);
-        $this->expectExceptionMessage(
-            config('entra.messages.only_existing'),
-        );
+        $this->expectException(OnlyExistingUsersException::class);
+        $this->expectExceptionMessage('only_existing');
 
         config()->set('entra.create_users', false);
 
