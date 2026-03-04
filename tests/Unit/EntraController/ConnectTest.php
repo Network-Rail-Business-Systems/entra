@@ -24,6 +24,7 @@ class ConnectTest extends TestCase
         $this->useDatabase();
 
         request()->headers->set('referer', 'https://networkrail.co.uk/a-page');
+        config()->set('entra.messages.only_existing', 'Only existing users are allowed');
 
         $this->controller = new EntraController();
     }
@@ -74,8 +75,8 @@ class ConnectTest extends TestCase
                 'message' => 'We were unable to sign you in because the servers are busy; try again later',
             ],
             [
-                'code' => 'Only',
-                'message' => 'Only A101010: A very technical error message',
+                'code' => 'only_existing',
+                'message' => 'Only existing users are allowed',
             ],
             [
                 'code' => 'goose_attack',
