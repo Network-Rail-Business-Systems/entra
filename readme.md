@@ -211,6 +211,15 @@ If the user already exists they will be updated.
 | $select   | ?array                | config(entra.sync_attributes) | Which fields to return                 |
 | :returns  | ?EntraAuthenticatable |                               | The user model, or null                |
 
+## Commands
+
+The following Artisan commands are available for use:
+
+| Command             | Parameters                                    | Usage                                              |
+|---------------------|-----------------------------------------------|----------------------------------------------------|
+| entra:import-user   | $term, $entraField = 'mail'                   | Import a single User by the given term             |
+| entra:refresh-users | $laravelField = 'email', $entraField = 'mail' | Re-import all Users in the system by a given field |
+
 ## Rules
 
 ### UserExistsInEntra

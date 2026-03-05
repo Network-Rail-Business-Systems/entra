@@ -3,6 +3,7 @@
 namespace NetworkRailBusinessSystems\Entra\Tests\Unit\EntraServiceProvider;
 
 use Dcblogdev\MsGraph\Events\NewMicrosoft365SignInEvent;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use NetworkRailBusinessSystems\Entra\EntraServiceProvider;
@@ -49,5 +50,17 @@ class BootTest extends TestCase
 
         Route::has('login');
         Route::has('logout');
+
+        $commands = Artisan::all();
+
+        $this->assertArrayHasKey(
+            'entra:import-user',
+            $commands,
+        );
+
+        $this->assertArrayHasKey(
+            'entra:refresh-users',
+            $commands,
+        );
     }
 }
