@@ -5,6 +5,7 @@ namespace NetworkRailBusinessSystems\Entra\Tests\Unit\EntraController;
 use ErrorException;
 use Exception;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use NetworkRailBusinessSystems\Entra\EntraController;
 use NetworkRailBusinessSystems\Entra\Facades\MsGraph;
@@ -41,6 +42,22 @@ class ConnectTest extends TestCase
         $this->assertStringStartsWith(
             'https://login.microsoftonline.com/common/oauth2/v2.0/authorize',
             $this->redirect->getTargetUrl(),
+        );
+    }
+
+    public function testDoesNotFlash(): void
+    {
+        MsGraph::partialMock()
+            ->expects('connect')
+            ->andReturns(
+                Redirect::to('/'),
+            );
+
+        request()->query->set('code', 'acb123');
+        $this->redirect = $this->controller->connect();
+
+        $this->assertFalse(
+            Session::has('url.intended'),
         );
     }
 

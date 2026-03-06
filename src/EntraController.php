@@ -15,10 +15,12 @@ class EntraController extends Controller
 {
     public function connect(): RedirectResponse
     {
-        Session::flash(
-            'url.intended',
-            URL::previous(),
-        );
+        if (request()->has('code') === false) {
+            Session::flash(
+                'url.intended',
+                URL::previous(),
+            );
+        }
 
         try {
             return MsGraph::connect();

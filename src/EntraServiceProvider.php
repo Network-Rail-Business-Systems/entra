@@ -6,6 +6,8 @@ use Dcblogdev\MsGraph\Events\NewMicrosoft365SignInEvent;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use NetworkRailBusinessSystems\Entra\Commands\ImportUser;
+use NetworkRailBusinessSystems\Entra\Commands\RefreshUsers;
 
 class EntraServiceProvider extends ServiceProvider
 {
@@ -22,6 +24,11 @@ class EntraServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/config.php' => config_path('entra.php'),
         ], 'entra');
+
+        $this->commands([
+            ImportUser::class,
+            RefreshUsers::class,
+        ]);
 
         Route::macro('entra', function () {
             Route::prefix('/entra')
