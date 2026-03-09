@@ -2,6 +2,7 @@
 
 namespace NetworkRailBusinessSystems\Entra\Tests\Unit\Traits\AuthenticatesWithEntra;
 
+use Carbon\Carbon;
 use NetworkRailBusinessSystems\Entra\Tests\Models\User;
 use NetworkRailBusinessSystems\Entra\Tests\TestCase;
 
@@ -20,11 +21,16 @@ class SyncEntraModelTest extends TestCase
         'userPrincipalName' => 'JBloggs2',
     ];
 
+    protected Carbon $now;
+
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->useDatabase();
+
+        $this->now = Carbon::now();
+        Carbon::setTestNow($this->now);
 
         $user = new User();
         $user->syncEntraDetails($this->details);
@@ -42,6 +48,7 @@ class SyncEntraModelTest extends TestCase
             'office' => $this->details['officeLocation'],
             'mobile_phone' => $this->details['mobilePhone'],
             'title' => $this->details['jobTitle'],
+            'updated_at' => $this->now,
             'username' => $this->details['userPrincipalName'],
         ]);
     }
