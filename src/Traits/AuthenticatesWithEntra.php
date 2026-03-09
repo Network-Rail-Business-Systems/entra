@@ -2,6 +2,7 @@
 
 namespace NetworkRailBusinessSystems\Entra\Traits;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use NetworkRailBusinessSystems\Entra\EntraAuthenticatable;
@@ -9,8 +10,9 @@ use NetworkRailBusinessSystems\Entra\Models\EntraToken;
 
 /**
  * @property string $email
- * @property ?\NetworkRailBusinessSystems\Entra\Models\EntraToken $entraToken
+ * @property ?EntraToken $entraToken
  * @property int $id
+ * @property Carbon $updated_at
  *
  * @mixin Model
  */
@@ -45,6 +47,10 @@ trait AuthenticatesWithEntra
 
         foreach ($attributes as $azureKey => $laravelKey) {
             $this->$laravelKey = $details[$azureKey];
+        }
+
+        if ($this->timestamps === true) {
+            $this->updated_at = Carbon::now();
         }
 
         $this->save();
