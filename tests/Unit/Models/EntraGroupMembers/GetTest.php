@@ -7,6 +7,7 @@ use NetworkRailBusinessSystems\Entra\Facades\MsGraphAdmin;
 use NetworkRailBusinessSystems\Entra\Models\EntraGroup;
 use NetworkRailBusinessSystems\Entra\Models\EntraGroupMembers;
 use NetworkRailBusinessSystems\Entra\Tests\TestCase;
+use stdClass;
 
 class GetTest extends TestCase
 {
@@ -45,6 +46,23 @@ class GetTest extends TestCase
     public function testQueriesAsAdmin(): void
     {
         $this->check(MsGraphAdmin::class);
+    }
+
+    public function testHandlesError(): void
+    {
+        $this->signIn();
+
+        MsGraph::partialMock()
+            ->expects('get')
+            ->twice()
+            ->andReturns(
+                EntraGroup::emulateResults(),
+                new stdClass(),
+            );
+
+        $this->assertEmpty(
+            EntraGroupMembers::get('error'),
+        );
     }
 
     /** @param class-string<MsGraph|MsGraphAdmin> $msGraph */

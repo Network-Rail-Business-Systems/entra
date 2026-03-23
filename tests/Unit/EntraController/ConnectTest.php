@@ -4,6 +4,7 @@ namespace NetworkRailBusinessSystems\Entra\Tests\Unit\EntraController;
 
 use ErrorException;
 use Exception;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
@@ -59,6 +60,21 @@ class ConnectTest extends TestCase
         $this->assertFalse(
             Session::has('url.intended'),
         );
+    }
+
+    public function testHandlesHttpException(): void
+    {
+        $this->expectException(HttpResponseException::class);
+
+        MsGraph::partialMock()
+            ->expects('connect')
+            ->andThrows(
+                new HttpResponseException(
+                    Redirect::to('/'),
+                ),
+            );
+
+        $this->redirect = $this->controller->connect();
     }
 
     #[DataProvider('exceptions')]

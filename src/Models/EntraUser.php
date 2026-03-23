@@ -26,7 +26,9 @@ class EntraUser extends EntraModel
             default => MsGraphAdmin::get("users?$parameters"),
         };
 
-        return $results['value'][0] ?? null;
+        return is_array($results) === true
+            ? $results['value'][0] ?? null
+            : null;
     }
 
     public static function list(
@@ -47,7 +49,9 @@ class EntraUser extends EntraModel
             default => MsGraphAdmin::get("users?$parameters"),
         };
 
-        return $results['value'] ?? [];
+        return is_array($results) === true
+            ? $results['value'] ?? []
+            : [];
     }
 
     public static function import(
