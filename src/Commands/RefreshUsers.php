@@ -37,11 +37,14 @@ class RefreshUsers extends Command
         $modelClass = config('entra.user_model');
         $modelClass::query()
             ->each(function ($user) use ($total, &$current, $entraField, $laravelField) {
+                /** @var Model $user */
+
                 $value = $user->$laravelField;
                 $this->info("$current/$total | Processing $value...");
 
-                /** @var Model $user */
-                EntraUser::import($value, $entraField);
+                if (EntraUser::import($value, $entraField) === null) {
+                    $this->warn('-- Unable to find the user, or an error occurred');
+                }
 
                 ++$current;
             });

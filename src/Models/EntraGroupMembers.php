@@ -34,7 +34,11 @@ class EntraGroupMembers extends EntraModel
             default => MsGraphAdmin::get($url),
         };
 
-        $members = $results['value'];
+        if (is_array($results) === false) {
+            return [];
+        }
+
+        $members = $results['value'] ?? [];
 
         while (array_key_exists(self::NEXT_LINK, $results) === true) {
             $results = match (true) {

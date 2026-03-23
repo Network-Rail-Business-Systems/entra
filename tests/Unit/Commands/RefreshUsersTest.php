@@ -19,7 +19,7 @@ class RefreshUsersTest extends TestCase
             ->sequence(
                 ['email' => 'gandalf.stormcrow@networkrail.co.uk'],
                 ['email' => 'frodo.baggins@networkrail.co.uk'],
-                ['email' => 'aragorn.elessar@networkrail.co.uk'],
+                ['email' => 'missingno@networkrail.co.uk'],
             )
             ->create();
     }
@@ -33,7 +33,8 @@ class RefreshUsersTest extends TestCase
             ->expectsOutput('Starting process...')
             ->expectsOutput('1/3 | Processing gandalf.stormcrow@networkrail.co.uk...')
             ->expectsOutput('2/3 | Processing frodo.baggins@networkrail.co.uk...')
-            ->expectsOutput('3/3 | Processing aragorn.elessar@networkrail.co.uk...')
+            ->expectsOutput('3/3 | Processing missingno@networkrail.co.uk...')
+            ->expectsOutput('-- Unable to find the user, or an error occurred')
             ->expectsOutput('Complete!');
     }
 }

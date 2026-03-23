@@ -25,7 +25,9 @@ class EntraGroup extends EntraModel
             default => MsGraphAdmin::get("groups?$parameters"),
         };
 
-        return $results['value'][0] ?? null;
+        return is_array($results) === true
+            ? $results['value'][0] ?? null
+            : null;
     }
 
     public static function list(
@@ -33,7 +35,7 @@ class EntraGroup extends EntraModel
         string $field = 'mail',
         array $select = [],
         int $limit = 10,
-    ): ?array {
+    ): array {
         $parameters = http_build_query([
             '$filter' => "startsWith($field, '$term')",
             '$select' => self::formatSelect($select),
@@ -46,7 +48,9 @@ class EntraGroup extends EntraModel
             default => MsGraphAdmin::get("groups?$parameters"),
         };
 
-        return $results['value'] ?? [];
+        return is_array($results) === true
+            ? $results['value'] ?? []
+            : [];
     }
 
     // Emulation
