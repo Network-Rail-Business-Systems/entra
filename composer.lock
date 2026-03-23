@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7fc1ac9c3ab849d2c01063d6c4a58e31",
+    "content-hash": "0081acb2d6f45f71fa466d8269879444",
     "packages": [
         {
             "name": "brick/math",
@@ -6054,16 +6054,16 @@
     "packages-dev": [
         {
             "name": "anthonyedmonds/laravel-testing-traits",
-            "version": "dev-laravel-13",
+            "version": "1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/AnthonyEdmonds/laravel-testing-traits.git",
-                "reference": "ef9f40fca06d050d7318b49e8ad3e828ee76e6a3"
+                "reference": "c39ffcebe9789595398916255f883e871cad4439"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/AnthonyEdmonds/laravel-testing-traits/zipball/ef9f40fca06d050d7318b49e8ad3e828ee76e6a3",
-                "reference": "ef9f40fca06d050d7318b49e8ad3e828ee76e6a3",
+                "url": "https://api.github.com/repos/AnthonyEdmonds/laravel-testing-traits/zipball/c39ffcebe9789595398916255f883e871cad4439",
+                "reference": "c39ffcebe9789595398916255f883e871cad4439",
                 "shasum": ""
             },
             "require": {
@@ -6106,9 +6106,9 @@
             ],
             "support": {
                 "issues": "https://github.com/AnthonyEdmonds/laravel-testing-traits/issues",
-                "source": "https://github.com/AnthonyEdmonds/laravel-testing-traits/tree/laravel-13"
+                "source": "https://github.com/AnthonyEdmonds/laravel-testing-traits/tree/1.3.0"
             },
-            "time": "2026-03-20T14:09:13+00:00"
+            "time": "2026-03-23T09:14:32+00:00"
         },
         {
             "name": "brianium/paratest",
@@ -7079,16 +7079,16 @@
         },
         {
             "name": "networkrailbusinesssystems/badges",
-            "version": "dev-laravel-13",
+            "version": "1.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Network-Rail-Business-Systems/badges.git",
-                "reference": "8f7040d6bd511d99a8d8c32c967011dfd25bcc78"
+                "reference": "4ede45770810072c21ff3ca749ecc6cf0add7ba9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Network-Rail-Business-Systems/badges/zipball/8f7040d6bd511d99a8d8c32c967011dfd25bcc78",
-                "reference": "8f7040d6bd511d99a8d8c32c967011dfd25bcc78",
+                "url": "https://api.github.com/repos/Network-Rail-Business-Systems/badges/zipball/4ede45770810072c21ff3ca749ecc6cf0add7ba9",
+                "reference": "4ede45770810072c21ff3ca749ecc6cf0add7ba9",
                 "shasum": ""
             },
             "type": "library",
@@ -7109,9 +7109,9 @@
             ],
             "description": "Generate readme badges during your pre-push",
             "support": {
-                "source": "https://github.com/Network-Rail-Business-Systems/badges/tree/laravel-13"
+                "source": "https://github.com/Network-Rail-Business-Systems/badges/tree/1.5.0"
             },
-            "time": "2026-03-20T14:11:24+00:00"
+            "time": "2026-03-23T08:53:02+00:00"
         },
         {
             "name": "nikic/php-parser",
@@ -8301,16 +8301,16 @@
         },
         {
             "name": "psy/psysh",
-            "version": "v0.12.21",
+            "version": "v0.12.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bobthecow/psysh.git",
-                "reference": "4821fab5b7cd8c49a673a9fd5754dc9162bb9e97"
+                "reference": "3be75d5b9244936dd4ac62ade2bfb004d13acf0f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bobthecow/psysh/zipball/4821fab5b7cd8c49a673a9fd5754dc9162bb9e97",
-                "reference": "4821fab5b7cd8c49a673a9fd5754dc9162bb9e97",
+                "url": "https://api.github.com/repos/bobthecow/psysh/zipball/3be75d5b9244936dd4ac62ade2bfb004d13acf0f",
+                "reference": "3be75d5b9244936dd4ac62ade2bfb004d13acf0f",
                 "shasum": ""
             },
             "require": {
@@ -8374,9 +8374,9 @@
             ],
             "support": {
                 "issues": "https://github.com/bobthecow/psysh/issues",
-                "source": "https://github.com/bobthecow/psysh/tree/v0.12.21"
+                "source": "https://github.com/bobthecow/psysh/tree/v0.12.22"
             },
-            "time": "2026-03-06T21:21:28+00:00"
+            "time": "2026-03-22T23:03:24+00:00"
         },
         {
             "name": "sebastian/cli-parser",
@@ -9456,10 +9456,7 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "anthonyedmonds/laravel-testing-traits": 20,
-        "networkrailbusinesssystems/badges": 20
-    },
+    "stability-flags": {},
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
