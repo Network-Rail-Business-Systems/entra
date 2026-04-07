@@ -5,6 +5,7 @@ namespace NetworkRailBusinessSystems\Entra;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 use ErrorException;
@@ -53,5 +54,10 @@ class EntraController extends Controller
     public function disconnect(): RedirectResponse
     {
         return MsGraph::disconnect();
+    }
+
+    public function intended(): RedirectResponse
+    {
+        return Redirect::intended();
     }
 }

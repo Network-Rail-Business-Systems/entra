@@ -22,7 +22,8 @@ Easily sign-in and poll users and groups in Microsoft Entra, built using [Larave
    ```bash
    php artisan vendor:publish --provider="Dcblogdev\MsGraph\MsGraphServiceProvider" --tag="config"
    ```
-   * You generally only need to set the `scopes` property
+   * Set `scopes` as required
+   * Set `msgraphLandingUri` to `env('APP_URL') . '/entra/intended'`
    * More information is available in the [Laravel Microsoft Graph](https://github.com/dcblogdev/laravel-microsoft-graph) documentation
 4. Publish the MsGraph migration file
    ```bash

@@ -50,6 +50,7 @@ class BootTest extends TestCase
 
         Route::has('login');
         Route::has('logout');
+        Route::has('intended');
 
         $commands = Artisan::all();
 

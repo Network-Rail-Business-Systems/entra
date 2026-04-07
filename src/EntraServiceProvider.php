@@ -40,6 +40,7 @@ class EntraServiceProvider extends ServiceProvider
 
                     Route::middleware('MsGraphAuthenticated')->group(function () {
                         Route::get('/disconnect', 'disconnect')->name('logout');
+                        Route::get('/intended', 'intended')->name('intended');
                     });
                 });
         });
