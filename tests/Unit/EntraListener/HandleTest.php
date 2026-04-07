@@ -3,7 +3,6 @@
 namespace NetworkRailBusinessSystems\Entra\Tests\Unit\EntraListener;
 
 use Dcblogdev\MsGraph\Events\NewMicrosoft365SignInEvent;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\Auth;
 use NetworkRailBusinessSystems\Entra\EntraListener;
 use NetworkRailBusinessSystems\Entra\Exceptions\OnlyExistingUsersException;
@@ -35,8 +34,6 @@ class HandleTest extends TestCase
 
     public function test(): void
     {
-        $this->expectException(HttpResponseException::class);
-
         $this->listener->handle($this->event);
 
         $this->assertDatabaseHas('users', [
