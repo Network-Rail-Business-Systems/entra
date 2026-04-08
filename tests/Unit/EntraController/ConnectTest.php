@@ -7,7 +7,6 @@ use Exception;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Session;
 use NetworkRailBusinessSystems\Entra\EntraController;
 use NetworkRailBusinessSystems\Entra\Facades\MsGraph;
 use NetworkRailBusinessSystems\Entra\Tests\TestCase;
@@ -25,7 +24,6 @@ class ConnectTest extends TestCase
 
         $this->useDatabase();
 
-        request()->headers->set('referer', 'https://networkrail.co.uk/a-page');
         config()->set('entra.messages.only_existing', 'Only existing users are allowed');
 
         $this->controller = new EntraController();
@@ -35,30 +33,9 @@ class ConnectTest extends TestCase
     {
         $this->redirect = $this->controller->connect();
 
-        $this->assertEquals(
-            'https://networkrail.co.uk/a-page',
-            Session::get('url.intended'),
-        );
-
         $this->assertStringStartsWith(
-            'https://login.microsoftonline.com/common/oauth2/v2.0/authorize',
+            'http://localhost/authorise',
             $this->redirect->getTargetUrl(),
-        );
-    }
-
-    public function testDoesNotFlash(): void
-    {
-        MsGraph::partialMock()
-            ->expects('connect')
-            ->andReturns(
-                Redirect::to('/'),
-            );
-
-        request()->query->set('code', 'acb123');
-        $this->redirect = $this->controller->connect();
-
-        $this->assertFalse(
-            Session::has('url.intended'),
         );
     }
 

@@ -5,9 +5,6 @@ namespace NetworkRailBusinessSystems\Entra;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\URL;
 use ErrorException;
 use NetworkRailBusinessSystems\Entra\Facades\MsGraph;
 use Throwable;
@@ -16,13 +13,6 @@ class EntraController extends Controller
 {
     public function connect(): RedirectResponse
     {
-        if (request()->has('code') === false) {
-            Session::flash(
-                'url.intended',
-                URL::previous(),
-            );
-        }
-
         try {
             return MsGraph::connect();
         } catch (HttpResponseException $exception) {
@@ -54,10 +44,5 @@ class EntraController extends Controller
     public function disconnect(): RedirectResponse
     {
         return MsGraph::disconnect();
-    }
-
-    public function intended(): RedirectResponse
-    {
-        return Redirect::intended();
     }
 }
