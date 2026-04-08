@@ -18,10 +18,10 @@ use NetworkRailBusinessSystems\Entra\Models\EntraToken;
  */
 trait AuthenticatesWithEntra
 {
-    public static function getEntraModel(array $details): self
+    public static function getEntraModel(array $details): static
     {
         /** @var EntraAuthenticatable $model */
-        $model = self::query()
+        $model = static::query()
             ->where('azure_id', '=', $details['id'])
             ->orWhere('email', '=', $details['mail'])
             ->firstOrNew();
@@ -40,7 +40,7 @@ trait AuthenticatesWithEntra
         return $details;
     }
 
-    public function syncEntraDetails(array $details): self
+    public function syncEntraDetails(array $details): static
     {
         $attributes = config('entra.sync_attributes');
         $details = static::formatEntraDetails($details);
