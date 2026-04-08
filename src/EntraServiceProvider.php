@@ -37,9 +37,7 @@ class EntraServiceProvider extends ServiceProvider
             Route::prefix('/entra')
                 ->controller(EntraController::class)
                 ->group(function () {
-                    Route::middleware('guest')->group(function () {
-                        Route::get('/connect', 'connect')->name('login');
-                    });
+                    Route::get('/connect', 'connect')->name('login');
 
                     Route::middleware('EntraAuthenticated')->group(function () {
                         Route::get('/disconnect', 'disconnect')->name('logout');
