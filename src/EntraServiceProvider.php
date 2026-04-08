@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use NetworkRailBusinessSystems\Entra\Commands\ImportUser;
 use NetworkRailBusinessSystems\Entra\Commands\RefreshUsers;
+use NetworkRailBusinessSystems\Entra\Middleware\EntraAuthenticated;
 
 class EntraServiceProvider extends ServiceProvider
 {
@@ -30,6 +31,8 @@ class EntraServiceProvider extends ServiceProvider
             RefreshUsers::class,
         ]);
 
+        Route::aliasMiddleware('EntraAuthenticated', EntraAuthenticated::class);
+
         Route::macro('entra', function () {
             Route::prefix('/entra')
                 ->controller(EntraController::class)
@@ -38,9 +41,8 @@ class EntraServiceProvider extends ServiceProvider
                         Route::get('/connect', 'connect')->name('login');
                     });
 
-                    Route::middleware('MsGraphAuthenticated')->group(function () {
+                    Route::middleware('EntraAuthenticated')->group(function () {
                         Route::get('/disconnect', 'disconnect')->name('logout');
-                        Route::get('/intended', 'intended')->name('intended');
                     });
                 });
         });

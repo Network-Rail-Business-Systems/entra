@@ -23,7 +23,6 @@ Easily sign-in and poll users and groups in Microsoft Entra, built using [Larave
    php artisan vendor:publish --provider="Dcblogdev\MsGraph\MsGraphServiceProvider" --tag="config"
    ```
    * Set `scopes` as required
-   * Set `msgraphLandingUri` to `env('APP_URL') . '/entra/intended'`
    * More information is available in the [Laravel Microsoft Graph](https://github.com/dcblogdev/laravel-microsoft-graph) documentation
 4. Publish the MsGraph migration file
    ```bash
@@ -38,7 +37,7 @@ Easily sign-in and poll users and groups in Microsoft Entra, built using [Larave
    ```php
    Route::entra();
    
-   Route::middleware('MsGraphAuthenticated')->group(function () {
+   Route::middleware('EntraAuthenticated')->group(function () {
        // Your authenticated routes here...
    }
    ```
@@ -98,7 +97,7 @@ The `EntraServiceProvider` automatically registers the relevant event listeners 
 
 ### Automatic
 
-If you wrap all of your system's endpoints in the `MsGraphAuthenticated` middleware, Users will be automatically kicked to the Entra login page.
+If you wrap all of your system's endpoints in the `EntraAuthenticated` middleware, Users will be automatically kicked to the Entra login page.
 
 Should they become signed out for whatever reason, they will be kicked to the Entra login screen.
 
@@ -110,11 +109,17 @@ You can allow users to manually login by providing a link to the `login` route, 
 
 Users can logout by calling the `logout` route, which will take them to the Entra logout page.
 
+## Middleware
+
+The `EntraAuthenticated` middleware has been provided to replace the base `MsGraphAuthenticated` middleware.
+
+This works in the same way as the base middleware, adding support for Laravel's `intended` destination route handling.
+
 ## Querying Entra
 
 You can use the `Laravel Microsoft Graph` library as normal.
 
-Entra queries on routes outside of the `MsGraphAuthenticated` middleware must connect to Entra first, otherwise the request will hit a 302 redirect and fail.
+Entra queries on routes outside of the `EntraAuthenticated` middleware must connect to Entra first, otherwise the request will hit a 302 redirect and fail.
 
 ### Service Accounts
 
@@ -129,6 +134,8 @@ Any calls using the models provided by this library will automatically fall back
 ### MsGraph
 
 A drop-in alias for the `MsGraph` facade has been provided which adds docblocks for IDE support.
+
+The `connect` method has been partially overridden to add support for Laravel's inbuilt `intended` route handling.
 
 ### MsGraphAdmin
 

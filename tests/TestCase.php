@@ -29,6 +29,12 @@ abstract class TestCase extends BaseTestCase
         config()->set('testing-traits.user_model', User::class);
         config()->set('entra.user_model', User::class);
         config()->set('msgraph.dbConnection', 'testing');
+        config()->set('msgraph.urlAuthorize', 'http://localhost/authorise');
+        config()->set('msgraph.msgraphLandingUri', 'http://localhost/landing');
+        config()->set('msgraph.redirectUri', 'http://localhost/entra/connect');
+        config()->set('msgraph.clientId', 'identity');
+        config()->set('msgraph.clientSecret', 'secrets');
+        config()->set('msgraph.scopes', 'scopes');
     }
 
     protected function getPackageProviders($app): array
