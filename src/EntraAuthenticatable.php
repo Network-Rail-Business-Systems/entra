@@ -6,11 +6,11 @@ use Illuminate\Contracts\Auth\Authenticatable;
 
 interface EntraAuthenticatable extends Authenticatable
 {
-    public static function getEntraModel(array $details): self;
+    public static function getEntraModel(array $details): static;
 
     public static function formatEntraDetails(array $details): array;
 
-    public function syncEntraDetails(array $details): self;
+    public function syncEntraDetails(array $details): static;
 
     public function entraId(): string;
 
