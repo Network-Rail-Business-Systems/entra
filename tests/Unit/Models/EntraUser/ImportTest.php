@@ -20,11 +20,12 @@ class ImportTest extends TestCase
     {
         $this->assertInstanceOf(
             User::class,
-            EntraUser::import('gandalf.stormcrow@networkrail.co.uk'),
+            EntraUser::import('Merry.Brandybuck@networkrail.co.uk'),
         );
 
         $this->assertDatabaseHas('users', [
-            'username' => 'gandalf@networkrail.co.uk',
+            'username' => 'merry@networkrail.co.uk',
+            'email' => 'merry.brandybuck@networkrail.co.uk',
         ]);
     }
 
