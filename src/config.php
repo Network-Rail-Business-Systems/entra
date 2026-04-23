@@ -152,7 +152,7 @@ return [
                 'givenName' => 'Merry',
                 'id' => '890ab4c5-6789-01de-f2g3-45678hijk9lm',
                 'jobTitle' => 'Troublemaker',
-                'mail' => 'merry.brandybuck@networkrail.co.uk',
+                'mail' => 'Merry.Brandybuck@networkrail.co.uk',
                 'mobilePhone' => '01234567890',
                 'officeLocation' => 'Green Dragon Inn',
                 'surname' => 'Brandybuck',
