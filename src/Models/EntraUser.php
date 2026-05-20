@@ -65,8 +65,6 @@ class EntraUser extends EntraModel
             return null;
         }
 
-        $details['mail'] = strtolower($details['mail']);
-
         /** @var class-string<EntraAuthenticatable> $modelClass */
         $modelClass = config('entra.user_model');
         $user = $modelClass::getEntraModel($details);
