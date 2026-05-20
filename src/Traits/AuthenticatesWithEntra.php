@@ -33,7 +33,6 @@ trait AuthenticatesWithEntra
     {
         foreach ($details as $key => $value) {
             if (is_array($value) === true) {
-                $details['mail'] = strtolower($details['mail']);
                 $details[$key] = $value[0] ?? null;
             }
         }
