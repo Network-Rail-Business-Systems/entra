@@ -1,8 +1,7 @@
 {
     "name": "networkrailbusinesssystems/entra",
     "description": "Easily sign-in and poll users and groups in Microsoft Entra",
-    "keywords": ["laravel",
-        "EntraAuthenticatable", "microsoft", "graph", "auth"],
+    "keywords": ["laravel", "EntraAuthenticatable", "microsoft", "graph", "auth"],
     "type": "library",
     "license": "MIT",
     "autoload": {
@@ -23,7 +22,7 @@
     ],
     "require": {
         "php": "^8.3",
-        "illuminate/support": "^13",
+        "illuminate/support": "^13|^12",
         "dcblogdev/laravel-microsoft-graph": "^4"
     },
     "require-dev": {
