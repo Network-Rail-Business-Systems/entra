@@ -78,6 +78,7 @@ class EntraToken extends MsGraphToken
                     '01234567890',
                 ],
                 'displayName' => 'Joe Bloggs',
+                'employeeId' => '123456',
                 'givenName' => 'Joe',
                 'jobTitle' => 'Business Systems Developer',
                 'mail' => 'Joe.Bloggs@networkrail.co.uk',

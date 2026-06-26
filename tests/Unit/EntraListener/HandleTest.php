@@ -32,7 +32,7 @@ class HandleTest extends TestCase
         $this->listener = new EntraListener();
     }
 
-    public function test(): void
+    public function testhandle(): void
     {
         $this->listener->handle($this->event);
 

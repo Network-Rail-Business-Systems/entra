@@ -23,6 +23,7 @@ class RegisterTest extends TestCase
             [
                 'businessPhones' => 'business_phone',
                 'displayName' => 'name',
+                'employeeId' => 'employee_number',
                 'givenName' => 'first_name',
                 'id' => 'azure_id',
                 'jobTitle' => 'title',

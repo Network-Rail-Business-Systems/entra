@@ -16,6 +16,7 @@ return [
     'sync_attributes' => [
         'businessPhones' => 'business_phone',
         'displayName' => 'name',
+        'employeeId' => 'employee_number',
         'givenName' => 'first_name',
         'id' => 'azure_id',
         'jobTitle' => 'title',
@@ -64,6 +65,7 @@ return [
             [
                 'businessPhones' => '01234567890',
                 'displayName' => 'Gandalf Stormcrow',
+                'employeeId' => '123456',
                 'givenName' => 'Gandalf',
                 'id' => '123ab4c5-6789-01de-f2g3-45678hijk9lm',
                 'jobTitle' => 'Wizard',
@@ -76,6 +78,7 @@ return [
             [
                 'businessPhones' => '01234567890',
                 'displayName' => 'Frodo Baggins',
+                'employeeId' => '123456',
                 'givenName' => 'Frodo',
                 'id' => '234ab4c5-6789-01de-f2g3-45678hijk9lm',
                 'jobTitle' => 'Ring Bearer',
@@ -88,6 +91,7 @@ return [
             [
                 'businessPhones' => '01234567890',
                 'displayName' => 'Samwise Gamgee',
+                'employeeId' => '123456',
                 'givenName' => 'Samwise',
                 'id' => '345ab4c5-6789-01de-f2g3-45678hijk9lm',
                 'jobTitle' => 'Gardener',
@@ -101,6 +105,7 @@ return [
             [
                 'businessPhones' => '01234567890',
                 'displayName' => 'Aragorn Elessar',
+                'employeeId' => '123456',
                 'givenName' => 'Aragorn',
                 'id' => '456ab4c5-6789-01de-f2g3-45678hijk9lm',
                 'jobTitle' => 'King',
@@ -113,6 +118,7 @@ return [
             [
                 'businessPhones' => '01234567890',
                 'displayName' => 'Legolas Thranduil',
+                'employeeId' => '123456',
                 'givenName' => 'Legolas',
                 'id' => '567ab4c5-6789-01de-f2g3-45678hijk9lm',
                 'jobTitle' => 'Prince',
@@ -125,6 +131,7 @@ return [
             [
                 'businessPhones' => '01234567890',
                 'displayName' => 'Gimli Gloin',
+                'employeeId' => '123456',
                 'givenName' => 'Gimli',
                 'id' => '678ab4c5-6789-01de-f2g3-45678hijk9lm',
                 'jobTitle' => 'Lord',
@@ -137,6 +144,7 @@ return [
             [
                 'businessPhones' => '01234567890',
                 'displayName' => 'Boromir Denethor',
+                'employeeId' => '123456',
                 'givenName' => 'Boromir',
                 'id' => '789ab4c5-6789-01de-f2g3-45678hijk9lm',
                 'jobTitle' => 'High Warden',
@@ -149,6 +157,7 @@ return [
             [
                 'businessPhones' => '01234567890',
                 'displayName' => 'Merry Brandybuck',
+                'employeeId' => '123456',
                 'givenName' => 'Merry',
                 'id' => '890ab4c5-6789-01de-f2g3-45678hijk9lm',
                 'jobTitle' => 'Troublemaker',
@@ -161,6 +170,7 @@ return [
             [
                 'businessPhones' => '01234567890',
                 'displayName' => 'Peregrin Took',
+                'employeeId' => null,
                 'givenName' => 'Peregrin',
                 'id' => '901ab4c5-6789-01de-f2g3-45678hijk9lm',
                 'jobTitle' => 'Fool',

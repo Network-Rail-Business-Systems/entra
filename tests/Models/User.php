@@ -13,6 +13,7 @@ use NetworkRailBusinessSystems\Entra\Traits\AuthenticatesWithEntra;
  * @property string $azure_id
  * @property string $business_phone
  * @property string $email
+ * @property ?string $employee_number
  * @property string $first_name
  * @property string $id
  * @property string $last_name

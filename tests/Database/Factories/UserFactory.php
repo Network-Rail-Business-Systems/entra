@@ -15,6 +15,7 @@ class UserFactory extends Factory
             'azure_id' => $this->faker->word(),
             'business_phone' => $this->faker->phoneNumber(),
             'email' => $this->faker->unique()->safeEmail(),
+            'employee_number' => $this->faker->numberBetween(1000, 999999),
             'first_name' => $this->faker->firstName(),
             'last_name' => $this->faker->lastName(),
             'name' => $this->faker->name(),
