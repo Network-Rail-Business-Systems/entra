@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->string('azure_id');
             $table->string('business_phone');
             $table->string('email');
+            $table->string('employee_number')->nullable();
             $table->string('first_name');
             $table->string('last_name');
             $table->string('mobile_phone');

@@ -11,6 +11,7 @@ class SyncEntraModelTest extends TestCase
     protected array $details = [
         'businessPhones' => '01234567890',
         'displayName' => 'Joe Bloggs',
+        'employeeId' => '123456',
         'givenName' => 'Joe',
         'id' => '123ab4c5-6789-01de-f2g3-45678hijk9lm',
         'jobTitle' => 'Business Systems Developer',
