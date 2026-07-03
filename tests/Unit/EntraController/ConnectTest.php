@@ -54,6 +54,22 @@ class ConnectTest extends TestCase
         $this->redirect = $this->controller->connect();
     }
 
+    public function testHandlesExceptionsWhenDebug(): void
+    {
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('Potato');
+
+        config()->set('app.debug', true);
+
+        MsGraph::partialMock()
+            ->expects('connect')
+            ->andThrows(
+                new Exception('Potato'),
+            );
+
+        $this->redirect = $this->controller->connect();
+    }
+
     #[DataProvider('exceptions')]
     public function testHandlesExceptions(string $code, string $message): void
     {

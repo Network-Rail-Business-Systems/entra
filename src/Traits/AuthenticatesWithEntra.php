@@ -33,8 +33,11 @@ trait AuthenticatesWithEntra
     {
         foreach ($details as $key => $value) {
             if (is_array($value) === true) {
-                $details['mail'] = strtolower($details['mail']);
                 $details[$key] = $value[0] ?? null;
+            }
+
+            if ($key === 'mail') {
+                $details[$key] = strtolower($details[$key]);
             }
         }
 
@@ -47,7 +50,7 @@ trait AuthenticatesWithEntra
         $details = static::formatEntraDetails($details);
 
         foreach ($attributes as $azureKey => $laravelKey) {
-            $this->$laravelKey = $details[$azureKey];
+            $this->$laravelKey = $details[$azureKey] ?? null;
         }
 
         if ($this->timestamps === true) {

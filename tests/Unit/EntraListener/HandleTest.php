@@ -25,6 +25,7 @@ class HandleTest extends TestCase
         parent::setUp();
 
         $this->useDatabase();
+        $this->useEntraEmulator();
 
         $this->token = EntraToken::emulateResults();
         $this->event = new NewMicrosoft365SignInEvent($this->token);
@@ -32,7 +33,7 @@ class HandleTest extends TestCase
         $this->listener = new EntraListener();
     }
 
-    public function testhandle(): void
+    public function testHandle(): void
     {
         $this->listener->handle($this->event);
 

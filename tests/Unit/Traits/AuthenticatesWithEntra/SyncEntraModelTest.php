@@ -15,7 +15,7 @@ class SyncEntraModelTest extends TestCase
         'givenName' => 'Joe',
         'id' => '123ab4c5-6789-01de-f2g3-45678hijk9lm',
         'jobTitle' => 'Business Systems Developer',
-        'mail' => 'Joe.Bloggs@networkrail.co.uk',
+        'mail' => 'joe.bloggs@networkrail.co.uk',
         'mobilePhone' => '01234567890',
         'officeLocation' => 'Some Office',
         'surname' => 'Bloggs',
@@ -30,7 +30,7 @@ class SyncEntraModelTest extends TestCase
 
         $this->useDatabase();
 
-        $this->now = Carbon::now();
+        $this->now = Carbon::today();
         Carbon::setTestNow($this->now);
 
         $user = new User();

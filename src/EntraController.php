@@ -6,6 +6,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controller;
 use ErrorException;
+use Illuminate\Support\Facades\App;
 use NetworkRailBusinessSystems\Entra\Facades\MsGraph;
 use Throwable;
 
@@ -24,20 +25,22 @@ class EntraController extends Controller
                 2,
             )[0];
 
-            throw new ErrorException(
-                match ($code) {
-                    'interaction_required',
-                    'invalid_client',
-                    'invalid_request',
-                    'invalid_resource',
-                    'unauthorized_client',
-                    'unsupported_grant_type' => "We were unable to sign you in due to a server configuration error; contact us for support quoting \"$code\"",
-                    'invalid_grant' => 'We were unable to sign you in because your request has expired; go back and try again',
-                    'temporarily_unavailable' => 'We were unable to sign you in because the servers are busy; try again later',
-                    'only_existing' => config('entra.messages.only_existing'),
-                    default => 'We were unable to sign you in; try again later',
-                },
-            );
+            App::hasDebugModeEnabled() === true
+                ? throw $exception
+                : throw new ErrorException(
+                    match ($code) {
+                        'interaction_required',
+                        'invalid_client',
+                        'invalid_request',
+                        'invalid_resource',
+                        'unauthorized_client',
+                        'unsupported_grant_type' => "We were unable to sign you in due to a server configuration error; contact us for support quoting \"$code\"",
+                        'invalid_grant' => 'We were unable to sign you in because your request has expired; go back and try again',
+                        'temporarily_unavailable' => 'We were unable to sign you in because the servers are busy; try again later',
+                        'only_existing' => config('entra.messages.only_existing'),
+                        default => 'We were unable to sign you in; try again later',
+                    },
+                );
         }
     }
 
