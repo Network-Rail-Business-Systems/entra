@@ -7,6 +7,7 @@ use Dcblogdev\MsGraph\MsGraph;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use NetworkRailBusinessSystems\Entra\Exceptions\OnlyExistingUsersException;
+use NetworkRailBusinessSystems\Entra\Models\EntraUser;
 
 class EntraListener
 {
@@ -25,6 +26,7 @@ class EntraListener
         );
 
         Auth::login($model);
+        EntraUser::import($model->entraEmail());
     }
 
     protected function syncModel(array $details): EntraAuthenticatable

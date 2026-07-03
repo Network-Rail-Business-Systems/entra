@@ -47,7 +47,7 @@ trait AuthenticatesWithEntra
         $details = static::formatEntraDetails($details);
 
         foreach ($attributes as $azureKey => $laravelKey) {
-            $this->$laravelKey = $details[$azureKey];
+            $this->$laravelKey = $details[$azureKey] ?? null;
         }
 
         if ($this->timestamps === true) {
