@@ -2,6 +2,7 @@
 
 namespace NetworkRailBusinessSystems\Entra\Tests\Unit\Traits\AuthenticatesWithEntra;
 
+use Carbon\Carbon;
 use NetworkRailBusinessSystems\Entra\Tests\Models\User;
 use NetworkRailBusinessSystems\Entra\Tests\TestCase;
 
@@ -36,5 +37,20 @@ class GetEntraModelTest extends TestCase
                 'mail' => $user->email,
             ])->id,
         );
+    }
+
+    public function testLoadsSoftDeleted(): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create([
+            'deleted_at' => Carbon::now(),
+        ]);
+
+        $model = User::getEntraModel([
+            'id' => $user->azure_id,
+            'mail' => $user->email,
+        ]);
+
+        $this->assertEquals($user->id, $model->id);
     }
 }
