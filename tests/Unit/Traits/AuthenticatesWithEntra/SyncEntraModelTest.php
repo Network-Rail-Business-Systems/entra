@@ -31,14 +31,16 @@ class SyncEntraModelTest extends TestCase
         $this->useDatabase();
 
         $this->now = Carbon::today();
-        Carbon::setTestNow($this->now);
 
-        $user = new User();
-        $user->syncEntraDetails($this->details);
+        Carbon::setTestNow($this->now);
     }
 
     public function testLoadsExisting(): void
     {
+        $user = new User();
+
+        $user->syncEntraDetails($this->details);
+
         $this->assertDatabaseHas('users', [
             'azure_id' => $this->details['id'],
             'business_phone' => $this->details['businessPhones'],
@@ -51,6 +53,20 @@ class SyncEntraModelTest extends TestCase
             'title' => $this->details['jobTitle'],
             'updated_at' => $this->now,
             'username' => $this->details['userPrincipalName'],
+        ]);
+    }
+
+    public function testRestoreSoftDeleted(): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create([
+            'deleted_at' => $this->now,
+        ]);
+
+        $user->syncEntraDetails($this->details);
+
+        $this->assertDatabaseHas('users', [
+            'deleted_at' => null,
         ]);
     }
 }

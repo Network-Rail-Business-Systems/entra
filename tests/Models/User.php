@@ -2,6 +2,7 @@
 
 namespace NetworkRailBusinessSystems\Entra\Tests\Models;
 
+use Carbon\Carbon;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,6 +14,7 @@ use NetworkRailBusinessSystems\Entra\Traits\AuthenticatesWithEntra;
 /**
  * @property string $azure_id
  * @property string $business_phone
+ * @property ?Carbon $deleted_at
  * @property string $email
  * @property ?string $employee_number
  * @property string $first_name

@@ -37,21 +37,4 @@ class GetEntraModelTest extends TestCase
             ])->id,
         );
     }
-
-    public function testRestoreSoftDeleted(): void
-    {
-        /** @var User $user */
-        $user = User::factory()->create([
-            'deleted_at' => now(),
-        ]);
-
-        $this->assertSoftDeleted($user);
-
-        $model = User::getEntraModel([
-            'id' => $user->azure_id,
-            'mail' => $user->email,
-        ]);
-
-        $this->assertFalse($model->fresh()->trashed());
-    }
 }

@@ -21,30 +21,14 @@ trait AuthenticatesWithEntra
 {
     public static function getEntraModel(array $details): static
     {
-        $query = static::query();
-
-        $usesSoftDeletes = in_array(
-            SoftDeletes::class,
-            class_uses_recursive(static::class),
-        );
-
-        if ($usesSoftDeletes === true) {
-            $query->withTrashed();
-        }
-
         /** @var EntraAuthenticatable $model */
-        $model = $query
+        $model = static::query()
+            ->when(static::usesSoftDeletes() === true, function ($query) {
+                $query->withTrashed();
+            })
             ->where('azure_id', '=', $details['id'])
             ->orWhere('email', '=', $details['mail'])
             ->firstOrNew();
-
-        if (
-            $usesSoftDeletes === true
-            && $model->exists === true
-            && $model->trashed() === true
-        ) {
-            $model->restore();
-        }
 
         return $model;
     }
@@ -77,6 +61,13 @@ trait AuthenticatesWithEntra
             $this->updated_at = Carbon::now();
         }
 
+        if (
+            static::usesSoftDeletes() === true
+            && $this->trashed() === true
+        ) {
+            $this->deleted_at = null;
+        }
+
         $this->save();
 
         return $this;
@@ -95,5 +86,14 @@ trait AuthenticatesWithEntra
     public function entraToken(): HasOne
     {
         return $this->hasOne(EntraToken::class);
+    }
+
+    protected static function usesSoftDeletes(): bool
+    {
+        return in_array(
+            SoftDeletes::class,
+            class_uses_recursive(static::class),
+            true,
+        );
     }
 }
