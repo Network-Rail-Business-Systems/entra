@@ -61,10 +61,7 @@ trait AuthenticatesWithEntra
             $this->updated_at = Carbon::now();
         }
 
-        if (
-            static::usesSoftDeletes() === true
-            && $this->trashed() === true
-        ) {
+        if (static::usesSoftDeletes() === true) {
             $this->deleted_at = null;
         }
 
@@ -94,6 +91,6 @@ trait AuthenticatesWithEntra
             SoftDeletes::class,
             class_uses_recursive(static::class),
             true,
-        );
+        ) === true;
     }
 }
