@@ -21,20 +21,12 @@ trait AuthenticatesWithEntra
 {
     public static function getEntraModel(array $details): static
     {
-//        /** @var EntraAuthenticatable $model */
-//        $model = static::query()
-//            ->where('azure_id', '=', $details['id'])
-//            ->orWhere('email', '=', $details['mail'])
-//            ->firstOrNew();
-//
-//        return $model;
+        $query = static::query();
 
         $usesSoftDeletes = in_array(
             SoftDeletes::class,
-            class_uses_recursive(static::class)
+            class_uses_recursive(static::class),
         );
-
-        $query = static::query();
 
         if ($usesSoftDeletes === true) {
             $query->withTrashed();
