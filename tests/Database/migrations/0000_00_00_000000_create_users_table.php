@@ -13,7 +13,7 @@ return new class extends Migration {
             $table->timestamps();
             $table->softDeletes();
 
-            $table->string('azure_id');
+            $table->string('azure_id')->nullable();
             $table->string('business_phone');
             $table->string('email');
             $table->string('employee_number')->nullable();

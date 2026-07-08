@@ -3,6 +3,7 @@
 namespace NetworkRailBusinessSystems\Entra\Traits;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -21,13 +22,27 @@ trait AuthenticatesWithEntra
 {
     public static function getEntraModel(array $details): static
     {
+        if (empty($details['mail']) === true) {
+            abort(403, 'Your Azure Entra account details are incomplete; ensure your e-mail address has been set on your account and try again');
+        }
+
         /** @var EntraAuthenticatable $model */
         $model = static::query()
-            ->when(static::usesSoftDeletes() === true, function ($query) {
-                $query->withTrashed();
+            ->when(
+                static::usesSoftDeletes() === true,
+                function (Builder $query) {
+                    $query->withTrashed();
+                },
+            )
+            ->where(function (Builder $query) use ($details) {
+                $query
+                    ->where('azure_id', '=', $details['id'])
+                    ->orWhere(function (Builder $query) use ($details) {
+                        $query
+                            ->whereNull('azure_id')
+                            ->where('email', '=', $details['mail']);
+                    });
             })
-            ->where('azure_id', '=', $details['id'])
-            ->orWhere('email', '=', $details['mail'])
             ->firstOrNew();
 
         return $model;
