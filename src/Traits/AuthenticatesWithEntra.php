@@ -5,6 +5,7 @@ namespace NetworkRailBusinessSystems\Entra\Traits;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use NetworkRailBusinessSystems\Entra\EntraAuthenticatable;
 use NetworkRailBusinessSystems\Entra\Models\EntraToken;
 
@@ -20,11 +21,38 @@ trait AuthenticatesWithEntra
 {
     public static function getEntraModel(array $details): static
     {
+//        /** @var EntraAuthenticatable $model */
+//        $model = static::query()
+//            ->where('azure_id', '=', $details['id'])
+//            ->orWhere('email', '=', $details['mail'])
+//            ->firstOrNew();
+//
+//        return $model;
+
+        $usesSoftDeletes = in_array(
+            SoftDeletes::class,
+            class_uses_recursive(static::class)
+        );
+
+        $query = static::query();
+
+        if ($usesSoftDeletes === true) {
+            $query->withTrashed();
+        }
+
         /** @var EntraAuthenticatable $model */
-        $model = static::query()
+        $model = $query
             ->where('azure_id', '=', $details['id'])
             ->orWhere('email', '=', $details['mail'])
             ->firstOrNew();
+
+        if (
+            $usesSoftDeletes === true
+            && $model->exists === true
+            && $model->trashed() === true
+        ) {
+            $model->restore();
+        }
 
         return $model;
     }

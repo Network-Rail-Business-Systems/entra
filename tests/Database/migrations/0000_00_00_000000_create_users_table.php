@@ -11,6 +11,7 @@ return new class extends Migration {
             $table->integerIncrements('id');
             $table->rememberToken();
             $table->timestamps();
+            $table->softDeletes();
 
             $table->string('azure_id');
             $table->string('business_phone');

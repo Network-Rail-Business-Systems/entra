@@ -5,6 +5,7 @@ namespace NetworkRailBusinessSystems\Entra\Tests\Models;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use NetworkRailBusinessSystems\Entra\EntraAuthenticatable;
 use NetworkRailBusinessSystems\Entra\Tests\Database\Factories\UserFactory;
 use NetworkRailBusinessSystems\Entra\Traits\AuthenticatesWithEntra;
@@ -28,6 +29,7 @@ class User extends Model implements EntraAuthenticatable
     use Authenticatable;
     use AuthenticatesWithEntra;
     use HasFactory;
+    use SoftDeletes;
 
     protected static function newFactory(): UserFactory
     {
