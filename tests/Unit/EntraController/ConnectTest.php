@@ -24,8 +24,6 @@ class ConnectTest extends TestCase
 
         $this->useDatabase();
 
-        config()->set('entra.messages.only_existing', 'Only existing users are allowed');
-
         $this->controller = new EntraController();
     }
 
@@ -102,11 +100,15 @@ class ConnectTest extends TestCase
             ],
             [
                 'code' => 'only_existing',
-                'message' => 'Only existing users are allowed',
+                'message' => 'Only registered users are allowed to use this system; contact support for assistance',
             ],
             [
                 'code' => 'goose_attack',
                 'message' => 'We were unable to sign you in; try again later',
+            ],
+            [
+                'code' => 'email_missing',
+                'message' => 'Your Azure Entra account details are incomplete; ensure an e-mail address has been set on your account and try again',
             ],
         ];
     }

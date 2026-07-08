@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use NetworkRailBusinessSystems\Entra\EntraAuthenticatable;
+use NetworkRailBusinessSystems\Entra\Exceptions\EmailMissingException;
 use NetworkRailBusinessSystems\Entra\Models\EntraToken;
 
 /**
@@ -23,7 +24,7 @@ trait AuthenticatesWithEntra
     public static function getEntraModel(array $details): static
     {
         if (empty($details['mail']) === true) {
-            abort(403, 'Your Azure Entra account details are incomplete; ensure your e-mail address has been set on your account and try again');
+            throw new EmailMissingException();
         }
 
         /** @var EntraAuthenticatable $model */

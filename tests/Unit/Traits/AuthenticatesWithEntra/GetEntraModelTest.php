@@ -3,9 +3,9 @@
 namespace NetworkRailBusinessSystems\Entra\Tests\Unit\Traits\AuthenticatesWithEntra;
 
 use Carbon\Carbon;
+use NetworkRailBusinessSystems\Entra\Exceptions\EmailMissingException;
 use NetworkRailBusinessSystems\Entra\Tests\Models\User;
 use NetworkRailBusinessSystems\Entra\Tests\TestCase;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class GetEntraModelTest extends TestCase
 {
@@ -18,8 +18,7 @@ class GetEntraModelTest extends TestCase
 
     public function testThrowsException(): void
     {
-        $this->expectException(HttpException::class);
-        $this->expectExceptionMessage('Your Azure Entra account details are incomplete; ensure your e-mail address has been set on your account and try again');
+        $this->expectException(EmailMissingException::class);
 
         User::getEntraModel([
             'id' => null,
