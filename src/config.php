@@ -7,6 +7,7 @@ return [
     /** Customise any error messages produced by Entra */
     'messages' => [
         'only_existing' => 'Only registered users are allowed to use this system; contact support for assistance',
+        'email_missing' => 'Your Azure Entra account details are incomplete; ensure an e-mail address has been set on your account and try again',
     ],
 
     /**

@@ -38,6 +38,7 @@ class EntraController extends Controller
                         'invalid_grant' => 'We were unable to sign you in because your request has expired; go back and try again',
                         'temporarily_unavailable' => 'We were unable to sign you in because the servers are busy; try again later',
                         'only_existing' => config('entra.messages.only_existing'),
+                        'email_missing' => config('entra.messages.email_missing'),
                         default => 'We were unable to sign you in; try again later',
                     },
                 );
