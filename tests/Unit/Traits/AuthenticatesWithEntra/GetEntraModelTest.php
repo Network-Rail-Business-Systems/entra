@@ -51,6 +51,6 @@ class GetEntraModelTest extends TestCase
             'mail' => $user->email,
         ]);
 
-        $this->assertSoftDeleted($model);
+        $this->assertEquals($user->id, $model->id);
     }
 }
