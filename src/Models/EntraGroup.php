@@ -13,6 +13,8 @@ class EntraGroup extends EntraModel
         string $field = 'mail',
         array $select = [],
     ): ?array {
+        $term = self::formatTerm($term);
+
         $parameters = http_build_query([
             '$filter' => "$field eq '$term'",
             '$select' => self::formatSelect($select),
@@ -36,6 +38,8 @@ class EntraGroup extends EntraModel
         array $select = [],
         int $limit = 10,
     ): array {
+        $term = self::formatTerm($term);
+
         $parameters = http_build_query([
             '$filter' => "startsWith($field, '$term')",
             '$select' => self::formatSelect($select),

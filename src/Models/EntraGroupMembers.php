@@ -15,6 +15,8 @@ class EntraGroupMembers extends EntraModel
         string $field = 'mail',
         array $select = ['mail'],
     ): ?array {
+        $term = self::formatTerm($term);
+
         $group = EntraGroup::get($term, $field, ['id']);
 
         if ($group === null) {
