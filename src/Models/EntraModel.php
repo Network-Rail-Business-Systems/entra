@@ -2,9 +2,18 @@
 
 namespace NetworkRailBusinessSystems\Entra\Models;
 
+use Illuminate\Support\Str;
+
 abstract class EntraModel
 {
     // Formatting
+    protected static function formatTerm(string $term): string
+    {
+        return Str::of($term)
+            ->replace('\'', '\'\'')
+            ->toString();
+    }
+
     protected static function formatSelect(array $select): string
     {
         return implode(',', $select);

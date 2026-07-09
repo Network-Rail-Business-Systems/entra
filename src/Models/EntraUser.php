@@ -14,6 +14,8 @@ class EntraUser extends EntraModel
         string $field = 'mail',
         ?array $select = null,
     ): ?array {
+        $term = self::formatTerm($term);
+
         $parameters = http_build_query([
             '$filter' => "$field eq '$term'",
             '$select' => self::formatSelect($select),
@@ -37,6 +39,8 @@ class EntraUser extends EntraModel
         int $limit = 10,
         ?array $select = null,
     ): array {
+        $term = self::formatTerm($term);
+
         $parameters = http_build_query([
             '$filter' => "startsWith($field, '$term')",
             '$select' => self::formatSelect($select),
@@ -59,6 +63,8 @@ class EntraUser extends EntraModel
         string $field = 'mail',
         ?array $select = null,
     ): ?EntraAuthenticatable {
+        $term = self::formatTerm($term);
+
         $details = self::get($term, $field, $select);
 
         if ($details === null) {
