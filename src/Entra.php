@@ -2,88 +2,133 @@
 
 namespace NetworkRailBusinessSystems\Entra;
 
-use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Redirect;
-use NetworkRailBusinessSystems\Entra\Interfaces\EntraAuthenticatable;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Str;
 
 class Entra
 {
-    // Authentication
-    public static function isConnected(): bool
-    {
-        /** @var ?EntraAuthenticatable $user */
-        $user = Auth::user();
+    public const string ENTRA_INTENDED = 'entra_intended';
 
-        return $user !== null
-            && $user->needsToReauthenticate() === false;
+    public const string ENTRA_STATE = 'entra_state';
+
+    public static function me(EntraAccessToken $token): EntraUser
+    {
+        $response = Http::withOptions([
+            'proxy' => config('entra.proxy'),
+        ])
+            ->withToken($token->accessToken)
+            ->acceptJson()
+            ->get(self::entraMeRoute())
+            ->json();
+
+        return new EntraUser(
+            $response['id'],
+            $response['userPrincipalName'],
+            $response['mail'],
+            $response['displayName'],
+            $response['givenName'],
+            $response['surname'],
+            $response['jobTitle'],
+            $response['officeLocation'],
+            $response['businessPhones'],
+            $response['mobilePhone'],
+        );
     }
 
-    public static function redeemCode(string $code): bool
+    public static function redeemCode(string $code): EntraAccessToken
     {
-        // TODO Attempt to redeem code into access token
-        // Capture specific errors
-        // TODO User session may not exist
+        $response = Http::withOptions([
+            'proxy' => config('entra.proxy'),
+        ])
+            ->acceptJson()
+            ->post(
+                self::entraRedeemCodeRoute(),
+                [
+                    'code' => $code,
+                    'client_id' => config('entra.client'),
+                    'scope' => config('entra.scopes'),
+                    'redirect_uri' => self::redirectUrlRoute(),
+                    'grant_type' => 'authorization_code',
+                    'client_secret' => config('entra.secret'),
+                ],
+            )
+            ->json();
 
-        /** @var ?EntraAuthenticatable $user */
-        $user = Auth::user();
+        return new EntraAccessToken(
+            $response['access_token'],
+            $response['expires_in'],
+            $response['refresh_token'],
+            $response['scope'],
+            $response['token_type'],
+            $response['ext_expires_in'],
+        );
     }
 
-    // Querying
-    public static function query(EntraAuthenticatable $user): PendingRequest
-    {
-        // TODO endpoints, proxy, filters, DTOs
-        // TODO Use generic account option
-        // https://learn.microsoft.com/en-us/graph/auth-v2-user?tabs=http
-
-        return Http::asJson()
-            ->withToken($user->entraToken->access_token);
-    }
-
-    public static function getGenericAccessToken()
-    {
-
-        return Http::asJson()
-            ->get('https://login.microsoftonline.com/c22cc3e1-5d7f-4f4d-be03-d5a158cc9409/oauth2/v2.0/authorize', [
-                'client_id' => '17dfa82f-473b-4542-89f4-1b114425261c',
-                'state' => '12345',
-                'scope' => 'User.Read.All offline_access Group.Read.All',
-                'redirect_uri' => 'http://localhost/entra/connect',
-                'response_type' => 'code',
-                'response_mode' => 'query',
-                'code_challenge' => 'YTFjNjI1OWYzMzA3MTI4ZDY2Njg5M2RkNmVjNDE5YmEyZGRhOGYyM2IzNjdmZWFhMTQ1ODg3NDcxY2Nl',
-                'code_challenge_method' => 'S256',
-            ])
-            ->body();
-    }
-
-    // Redirection
+    // Redirects
     public static function redirectToEntraLogin(): RedirectResponse
     {
-        // TODO Capture intended
+        Session::put(
+            self::ENTRA_INTENDED,
+            Session::get('url.intended'),
+        );
 
         return Redirect::to(
             self::entraLoginRoute(),
         );
     }
 
-    public static function redirectToEntraLogout(): RedirectResponse
+    public static function redirectToIntended(): RedirectResponse
     {
         return Redirect::to(
-            self::entraLogoutRoute(),
+            self::intendedRoute(),
         );
     }
 
-    // Routing
+    // Routes
     public static function entraLoginRoute(): string
     {
-        // TODO
+        $tenant = config('entra.tenant');
+        $state = Str::random();
+
+        Session::put(self::ENTRA_STATE, $state);
+
+        return URL::to(
+            "https://login.microsoftonline.com/$tenant/oauth2/v2.0/authorize",
+            [
+                'client_id' => config('entra.client'),
+                'response_type' => 'code',
+                'redirect_uri' => self::redirectUrlRoute(),
+                'response_mode' => 'query',
+                'scope' => config('entra.scopes'),
+                'state' => $state,
+            ],
+        );
     }
 
-    public static function entraLogoutRoute(): string
+    public static function entraMeRoute(): string
     {
-        // TODO
+        return 'https://graph.microsoft.com/v1.0/me';
+    }
+
+    public static function entraRedeemCodeRoute(): string
+    {
+        $tenant = config('entra.tenant');
+
+        return URL::to("https://login.microsoftonline.com/$tenant/oauth2/v2.0/token");
+    }
+
+    public static function redirectUrlRoute(): string
+    {
+        return config('app.url') . '/entra/connect';
+    }
+
+    public static function intendedRoute(): string
+    {
+        return Session::get(self::ENTRA_INTENDED)
+            ?? Redirect::intended()->getTargetUrl();
     }
 }

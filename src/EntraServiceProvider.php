@@ -4,8 +4,6 @@ namespace NetworkRailBusinessSystems\Entra;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
-use NetworkRailBusinessSystems\Entra\Controllers\EntraController;
-use NetworkRailBusinessSystems\Entra\Middleware\EntraAuthenticated;
 
 class EntraServiceProvider extends ServiceProvider
 {
@@ -32,10 +30,6 @@ class EntraServiceProvider extends ServiceProvider
                 ->group(function () {
                     Route::get('/login', 'login')->name('login');
                     Route::get('/connect', 'connect')->name('connect');
-
-                    Route::middleware('EntraAuthenticated')->group(function () {
-                        Route::get('/logout', 'logout')->name('logout');
-                    });
                 });
         });
     }
