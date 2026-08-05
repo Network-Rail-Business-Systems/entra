@@ -2,111 +2,46 @@
 
 namespace NetworkRailBusinessSystems\Entra\Traits;
 
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use NetworkRailBusinessSystems\Entra\EntraAuthenticatable;
-use NetworkRailBusinessSystems\Entra\Exceptions\EmailMissingException;
+use NetworkRailBusinessSystems\Entra\Interfaces\EntraAuthenticatable;
 use NetworkRailBusinessSystems\Entra\Models\EntraToken;
 
 /**
- * @property string $email
- * @property ?EntraToken $entraToken
- * @property int $id
- * @property Carbon $updated_at
- *
+ * @mixin EntraAuthenticatable
  * @mixin Model
  */
 trait AuthenticatesWithEntra
 {
-    public static function getEntraModel(array $details): static
-    {
-        if (empty($details['mail']) === true) {
-            throw new EmailMissingException();
-        }
-
-        /** @var EntraAuthenticatable $model */
-        $model = static::query()
-            ->when(
-                static::usesSoftDeletes() === true,
-                function (Builder $query) {
-                    $query->withTrashed();
-                },
-            )
-            ->where(function (Builder $query) use ($details) {
-                $query
-                    ->where('azure_id', '=', $details['id'])
-                    ->orWhere(function (Builder $query) use ($details) {
-                        $query
-                            ->whereNull('azure_id')
-                            ->where('email', '=', $details['mail']);
-                    });
-            })
-            ->firstOrNew();
-
-        return $model;
-    }
-
-    public static function formatEntraDetails(array $details): array
-    {
-        foreach ($details as $key => $value) {
-            if (is_array($value) === true) {
-                $details[$key] = $value[0] ?? null;
-            }
-
-            if ($key === 'mail') {
-                $details[$key] = strtolower($details[$key]);
-            }
-        }
-
-        return $details;
-    }
-
-    public function syncEntraDetails(array $details): static
-    {
-        $attributes = config('entra.sync_attributes');
-        $details = static::formatEntraDetails($details);
-
-        foreach ($attributes as $azureKey => $laravelKey) {
-            $this->$laravelKey = $details[$azureKey] ?? null;
-        }
-
-        if ($this->timestamps === true) {
-            $this->updated_at = Carbon::now();
-        }
-
-        if (static::usesSoftDeletes() === true) {
-            $this->deleted_at = null;
-        }
-
-        $this->save();
-
-        return $this;
-    }
-
-    public function entraId(): string
-    {
-        return $this->id;
-    }
-
-    public function entraEmail(): string
-    {
-        return $this->email;
-    }
-
+    // Relationships
     public function entraToken(): HasOne
     {
         return $this->hasOne(EntraToken::class);
     }
 
-    protected static function usesSoftDeletes(): bool
+    // Utilities
+    public function hasRefreshToken(): bool
     {
-        return in_array(
-            SoftDeletes::class,
-            class_uses_recursive(static::class),
-            true,
-        ) === true;
+        return $this->entraToken !== null
+            && $this->entraToken->refresh_token !== null;
+    }
+
+    public function hasValidAccessToken(): bool
+    {
+        return $this->entraToken !== null
+            && $this->entraToken->hasExpired() === false;
+    }
+
+    public function needsToReauthenticate(): bool
+    {
+        return $this->hasValidAccessToken() === false
+            || $this->hasRefreshToken() === false
+            || $this->refreshToken() === false;
+    }
+
+    public function refreshToken(): bool
+    {
+        // TODO Attempt to redeem refresh token
+        // Capture specific errors?
     }
 }

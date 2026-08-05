@@ -7,16 +7,13 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::create('ms_graph_tokens', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('user_id');
-            $table->string('email')->nullable();
+        Schema::create('entra_tokens', function (Blueprint $table) {
+            $table->unsignedInteger('user_id')->primary();
             $table->text('access_token');
             $table->text('refresh_token')->nullable();
             $table->string('expires');
-            $table->timestamps();
 
-            $table->foreign('user_id', 'fk_token_user')
+            $table->foreign('user_id', 'fk_entra_token_user')
                 ->references('id')
                 ->on('users')
                 ->cascadeOnUpdate()
@@ -26,6 +23,6 @@ return new class extends Migration {
 
     public function down(): void
     {
-        Schema::dropIfExists('ms_graph_tokens');
+        Schema::dropIfExists('entra_tokens');
     }
 };

@@ -1,60 +1,42 @@
 <?php
 
+
 namespace NetworkRailBusinessSystems\Entra\Models;
 
 use Carbon\Carbon;
-use Dcblogdev\MsGraph\Models\MsGraphToken;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use NetworkRailBusinessSystems\Entra\Tests\Database\Factories\EntraTokenFactory;
+use NetworkRailBusinessSystems\Entra\Database\Factories\EntraTokenFactory;
 
 /**
  * @property string $access_token
- * @property Carbon $created_at
- * @property string $email
- * @property string $expires
- * @property int $id
- * @property string $refresh_token
- * @property Carbon $updated_at
+ * @property Carbon $expires
+ * @property ?string $refresh_token
  * @property Model $user
  * @property int $user_id
  */
-class EntraToken extends MsGraphToken
+class EntraToken extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
+    protected $fillable = [];
+
+    protected $guarded = [
         'access_token',
-        'email',
         'expires',
         'refresh_token',
         'user_id',
     ];
 
-    protected $guarded = [
-        'created_at',
-        'id',
-        'updated_at',
-    ];
-
     protected $casts = [
-        'created_at' => 'datetime',
-        'id' => 'int',
-        'updated_at' => 'datetime',
+        'expires' => 'timestamp', // TODO TEST
         'user_id' => 'int',
     ];
 
-    protected $table = 'ms_graph_tokens';
+    public $timestamps = false;
 
     // Setup
-    public function __construct(array $attributes = [])
-    {
-        parent::__construct();
-
-        $this->fill($attributes);
-    }
-
     protected static function newFactory(): EntraTokenFactory
     {
         return new EntraTokenFactory();
@@ -64,8 +46,14 @@ class EntraToken extends MsGraphToken
     public function user(): BelongsTo
     {
         return $this->belongsTo(
-            config('entra.user_model'),
+            config('entra.models.user'),
         );
+    }
+
+    // Utilities
+    public function hasExpired(): bool
+    {
+        return $this->expires->isPast() === true;
     }
 
     // Emulation
@@ -89,8 +77,8 @@ class EntraToken extends MsGraphToken
                 'userPrincipalName' => 'JBloggs2@networkrail.co.uk',
                 'id' => '123ab4c5-6789-01de-f2g3-45678hijk9lm',
             ],
-            'accessToken' => '... A string which is ~2400 characters long ...',
-            'refreshToken' => '... A string which is ~2400 characters long ...',
+            'accessToken' => 'A string which is ~2400 characters long...',
+            'refreshToken' => 'A string which is ~2400 characters long...',
             'expires' => 1234567890,
         ];
     }
