@@ -14,4 +14,16 @@ class EntraAccessToken
     ) {
         //
     }
+
+    public static function fake(): EntraAccessToken
+    {
+        return new EntraAccessToken(
+            'abc123',
+            1234,
+            'def456',
+            'scopes',
+            'Bearer',
+            1234,
+        );
+    }
 }

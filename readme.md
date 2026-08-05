@@ -42,7 +42,6 @@ The following settings can be changed in your `.env`:
 | .env key        | Config key      | Required | Notes                                         |
 |-----------------|-----------------|----------|-----------------------------------------------|
 | ENTRA_CLIENT    | entra.client    | Yes      | The Entra application / client ID             |
-| ENTRA_EMULATION | entra.emulation | No       | Whether to emulate calls to Entra for testing |
 | ENTRA_PROXY     | entra.proxy     | No       | The proxy URL to use for connecting to Entra  |
 | ENTRA_SCOPES    | entra.scopes    | No       | The scopes to use when polling Entra          |
 | ENTRA_SECRET    | entra.secret    | Yes      | The Entra application secret                  |

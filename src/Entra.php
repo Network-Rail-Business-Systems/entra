@@ -15,6 +15,9 @@ class Entra
 
     public const string ENTRA_STATE = 'entra_state';
 
+    public const string ENTRA_TOKEN = 'entra_token';
+
+    // Actions
     public static function me(EntraAccessToken $token): EntraUser
     {
         $response = Http::withOptions([
@@ -46,19 +49,19 @@ class Entra
         ])
             ->acceptJson()
             ->post(
-                self::entraRedeemCodeRoute(),
+                self::entraTokenRoute(),
                 [
-                    'code' => $code,
                     'client_id' => config('entra.client'),
-                    'scope' => config('entra.scopes'),
-                    'redirect_uri' => self::redirectUrlRoute(),
-                    'grant_type' => 'authorization_code',
                     'client_secret' => config('entra.secret'),
+                    'code' => $code,
+                    'grant_type' => 'authorization_code',
+                    'redirect_uri' => self::redirectUrlRoute(),
+                    'scope' => config('entra.scopes'),
                 ],
             )
             ->json();
 
-        return new EntraAccessToken(
+        $token = new EntraAccessToken(
             $response['access_token'],
             $response['expires_in'],
             $response['refresh_token'],
@@ -66,6 +69,42 @@ class Entra
             $response['token_type'],
             $response['ext_expires_in'],
         );
+
+        Session::put(self::ENTRA_TOKEN, $token);
+
+        return $token;
+    }
+
+    public static function refreshToken(EntraAccessToken $token): EntraAccessToken
+    {
+        $response = Http::withOptions([
+            'proxy' => config('entra.proxy'),
+        ])
+            ->acceptJson()
+            ->post(
+                self::entraTokenRoute(),
+                [
+                    'client_id' => config('entra.client'),
+                    'client_secret' => config('entra.secret'),
+                    'grant_type' => 'refresh_token',
+                    'refresh_token' => $token->refreshToken,
+                    'scope' => config('entra.scopes'),
+                ],
+            )
+            ->json();
+
+        $token = new EntraAccessToken(
+            $response['access_token'],
+            $response['expires_in'],
+            $response['refresh_token'],
+            $response['scope'],
+            $response['token_type'],
+            $token->extExpiresIn,
+        );
+
+        Session::put(self::ENTRA_TOKEN, $token);
+
+        return $token;
     }
 
     // Redirects
@@ -73,7 +112,7 @@ class Entra
     {
         Session::put(
             self::ENTRA_INTENDED,
-            Session::get('url.intended'),
+            Entra::intendedRoute(),
         );
 
         return Redirect::to(
@@ -96,13 +135,13 @@ class Entra
 
         Session::put(self::ENTRA_STATE, $state);
 
-        return URL::to(
+        return URL::query(
             "https://login.microsoftonline.com/$tenant/oauth2/v2.0/authorize",
             [
                 'client_id' => config('entra.client'),
-                'response_type' => 'code',
                 'redirect_uri' => self::redirectUrlRoute(),
                 'response_mode' => 'query',
+                'response_type' => 'code',
                 'scope' => config('entra.scopes'),
                 'state' => $state,
             ],
@@ -114,7 +153,7 @@ class Entra
         return 'https://graph.microsoft.com/v1.0/me';
     }
 
-    public static function entraRedeemCodeRoute(): string
+    public static function entraTokenRoute(): string
     {
         $tenant = config('entra.tenant');
 

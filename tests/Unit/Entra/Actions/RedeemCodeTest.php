@@ -1,0 +1,24 @@
+<?php
+
+namespace NetworkRailBusinessSystems\Entra\Tests\Unit\Entra\Actions;
+
+use Illuminate\Support\Facades\Session;
+use NetworkRailBusinessSystems\Entra\Entra;
+use NetworkRailBusinessSystems\Entra\EntraAccessToken;
+use NetworkRailBusinessSystems\Entra\Tests\TestCase;
+
+class RedeemCodeTest extends TestCase
+{
+    public function test(): void
+    {
+        $this->assertInstanceOf(
+            EntraAccessToken::class,
+            Entra::redeemCode('abc123'),
+        );
+
+        $this->assertInstanceOf(
+            EntraAccessToken::class,
+            Session::get(Entra::ENTRA_TOKEN),
+        );
+    }
+}

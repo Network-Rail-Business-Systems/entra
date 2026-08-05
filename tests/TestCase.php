@@ -2,24 +2,23 @@
 
 namespace NetworkRailBusinessSystems\Entra\Tests;
 
-use AnthonyEdmonds\LaravelTestingTraits\AssertsRelationships;
 use AnthonyEdmonds\LaravelTestingTraits\AssertsValidationRules;
-use AnthonyEdmonds\LaravelTestingTraits\SignsInUsers;
-use Illuminate\Foundation\Testing\WithFaker;
+use NetworkRailBusinessSystems\Entra\AssertsEntra;
 use NetworkRailBusinessSystems\Entra\EntraServiceProvider;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
 {
-    use WithFaker;
-    use AssertsRelationships;
+    use AssertsEntra;
     use AssertsValidationRules;
-    use SignsInUsers;
 
     protected function setUp(): void
     {
         parent::setUp();
 
+        config()->set('app.url', 'http://app.url');
+
+        $this->useEntraEmulator();
         $this->withoutVite();
     }
 
@@ -28,11 +27,5 @@ abstract class TestCase extends BaseTestCase
         return [
             EntraServiceProvider::class,
         ];
-    }
-
-    protected function useDatabase(): void
-    {
-        $this->app->useDatabasePath(__DIR__ . '/Database');
-        $this->runLaravelMigrations();
     }
 }
