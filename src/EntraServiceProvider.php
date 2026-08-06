@@ -4,6 +4,9 @@ namespace NetworkRailBusinessSystems\Entra;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use NetworkRailBusinessSystems\Entra\Controllers\EntraController;
+use NetworkRailBusinessSystems\Entra\Middleware\EntraAuthenticated;
+use NetworkRailBusinessSystems\Entra\Middleware\EntraTokenExists;
 
 class EntraServiceProvider extends ServiceProvider
 {
@@ -22,6 +25,7 @@ class EntraServiceProvider extends ServiceProvider
         ], 'entra');
 
         Route::aliasMiddleware('EntraAuthenticated', EntraAuthenticated::class);
+        Route::aliasMiddleware('EntraTokenExists', EntraTokenExists::class);
 
         Route::macro('entra', function () {
             Route::prefix('/entra')
@@ -30,6 +34,7 @@ class EntraServiceProvider extends ServiceProvider
                 ->group(function () {
                     Route::get('/login', 'login')->name('login');
                     Route::get('/connect', 'connect')->name('connect');
+                    Route::get('/logout', 'logout')->name('logout');
                 });
         });
     }

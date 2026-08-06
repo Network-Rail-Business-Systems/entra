@@ -4,7 +4,7 @@ namespace NetworkRailBusinessSystems\Entra\Tests\Models;
 
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
-use NetworkRailBusinessSystems\Entra\AuthenticatesWithEntra;
+use NetworkRailBusinessSystems\Entra\Interfaces\AuthenticatesWithEntra;
 
 class User extends Model implements AuthenticatesWithEntra
 {

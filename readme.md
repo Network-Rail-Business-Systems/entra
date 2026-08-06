@@ -22,16 +22,37 @@ Since our systems require guests to be able to poll the directory, Entra can onl
    ```bash
    composer require networkrailbusinesssystems/entra
    ```
-2. Adjust your `.env` to include the required settings
-3. Implement the `AuthenticatesWithEntra` interface on your `User`
-4. Add the Entra routes to your `routes/web.php` using the macro:
+2. Publish the `entra.php` config file:
+   ```bash
+   php artisan vendor:publish --tag="entra"
+   ```
+   * You may skip this step if your `User` model's FQN is `App\Models\User`
+   * Set the `entra.models.user` setting to your `User` model:
+     ```php
+     return [
+         ...
+         'models' => [
+             'user' => User::class,
+         ],
+         ...
+     ];
+     ```
+3. Adjust your `.env` to include the required settings
+4. Implement the `AuthenticatesWithEntra` interface on your `User`
+5. Add the Entra routes to your `routes/web.php` using the macro:
    ```php
    Route::entra();
    ```
-5. Secure your other routes using the `EntraAuthenticated` middleware:
+6. Secure your other routes using the `EntraAuthenticated` middleware:
    ```php
    Route::middleware('EntraAuthenticated')->group(function () {
        // Your authenticated routes here...
+   }
+   ```
+7. Use the `EntraTokenExists` middleware on routes which require an access token:
+   ```php
+   Route::middleware('EntraTokenExists')->group(function () {
+       // Your authenticated token routes here...
    }
    ```
 
@@ -46,6 +67,12 @@ The following settings can be changed in your `.env`:
 | ENTRA_SCOPES    | entra.scopes    | No       | The scopes to use when polling Entra          |
 | ENTRA_SECRET    | entra.secret    | Yes      | The Entra application secret                  |
 | ENTRA_TENANT    | entra.tenant    | Yes      | The Entra directory / tenant ID               |
+
+The following additional settings are available in the `entra.php` configuration file:
+
+| Config key        | Required | Default         | Notes                        |
+|-------------------|----------|-----------------|------------------------------|
+| entra.models.user | Yes      | App\Models\User | The FQN to your `User` model |
 
 ## Usage
 
@@ -68,10 +95,23 @@ You could also provide a `Sign in` or `Login` button someone on your interface w
 
 ### Signing out
 
-Signing out is not provided by this library, but could be implemented if required.
+Users can visit the `entra.logout` route to sign out.
+
+This will only sign them out of the local system, not their Entra browser session.
 
 ### Preventing Users being created
 
 Some systems do not allow `User` models to be created automatically.
 
 To prevent this, call `abort()` or throw an exception in your `AuthenticatesWithEntra` implementation. 
+
+### Access Token
+
+You can find the current `EntraAccessToken` for the logged in `User` in their session:
+
+```php
+/** @var ?EntraAccessToken $token */
+$token = Session::get(Entra::ENTRA_TOKEN);
+```
+
+Entra may be expanded in the future with endpoints for use.

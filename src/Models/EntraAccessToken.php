@@ -1,9 +1,13 @@
 <?php
 
-namespace NetworkRailBusinessSystems\Entra;
+namespace NetworkRailBusinessSystems\Entra\Models;
+
+use Carbon\Carbon;
 
 class EntraAccessToken
 {
+    public Carbon $expires_at;
+
     public function __construct(
         public string $accessToken,
         public int $expiresIn,
@@ -12,7 +16,7 @@ class EntraAccessToken
         public string $tokenType,
         public int $extExpiresIn,
     ) {
-        //
+        $this->expires_at = Carbon::now()->addSeconds($this->expiresIn);
     }
 
     public static function fake(): EntraAccessToken
@@ -25,5 +29,10 @@ class EntraAccessToken
             'Bearer',
             1234,
         );
+    }
+
+    public function hasExpired(): bool
+    {
+        return $this->expires_at->isPast() === true;
     }
 }

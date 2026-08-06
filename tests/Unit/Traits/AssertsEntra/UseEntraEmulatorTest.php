@@ -1,6 +1,6 @@
 <?php
 
-namespace NetworkRailBusinessSystems\Entra\Tests\Unit\AssertsEntra;
+namespace NetworkRailBusinessSystems\Entra\Tests\Unit\Traits\AssertsEntra;
 
 use NetworkRailBusinessSystems\Entra\Tests\TestCase;
 

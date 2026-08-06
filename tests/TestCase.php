@@ -3,8 +3,8 @@
 namespace NetworkRailBusinessSystems\Entra\Tests;
 
 use AnthonyEdmonds\LaravelTestingTraits\AssertsValidationRules;
-use NetworkRailBusinessSystems\Entra\AssertsEntra;
 use NetworkRailBusinessSystems\Entra\EntraServiceProvider;
+use NetworkRailBusinessSystems\Entra\Traits\AssertsEntra;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase

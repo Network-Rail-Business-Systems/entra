@@ -1,10 +1,11 @@
 <?php
 
-namespace NetworkRailBusinessSystems\Entra;
+namespace NetworkRailBusinessSystems\Entra\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use NetworkRailBusinessSystems\Entra\Entra;
 
 class EntraAuthenticated
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace NetworkRailBusinessSystems\Entra\Tests\Unit\EntraAccessToken;
+namespace NetworkRailBusinessSystems\Entra\Tests\Unit\Models\EntraAccessToken;
 
-use NetworkRailBusinessSystems\Entra\EntraAccessToken;
+use NetworkRailBusinessSystems\Entra\Models\EntraAccessToken;
 use NetworkRailBusinessSystems\Entra\Tests\TestCase;
 
 class FakeTest extends TestCase

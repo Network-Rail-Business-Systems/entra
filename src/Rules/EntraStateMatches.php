@@ -1,10 +1,11 @@
 <?php
 
-namespace NetworkRailBusinessSystems\Entra;
+namespace NetworkRailBusinessSystems\Entra\Rules;
 
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Support\Facades\Session;
+use NetworkRailBusinessSystems\Entra\Entra;
 
 class EntraStateMatches implements ValidationRule
 {
@@ -17,7 +18,7 @@ class EntraStateMatches implements ValidationRule
             return;
         }
 
-        if ($value === $state) {
+        if ($value !== $state) {
             $fail('Entra state does not match');
         }
     }

@@ -1,8 +1,8 @@
 <?php
 
-namespace NetworkRailBusinessSystems\Entra\Tests\Unit\EntraUser;
+namespace NetworkRailBusinessSystems\Entra\Tests\Unit\Models\EntraUser;
 
-use NetworkRailBusinessSystems\Entra\EntraUser;
+use NetworkRailBusinessSystems\Entra\Models\EntraUser;
 use NetworkRailBusinessSystems\Entra\Tests\TestCase;
 
 class ConstructTest extends TestCase

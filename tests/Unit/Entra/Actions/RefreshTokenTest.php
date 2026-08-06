@@ -4,7 +4,7 @@ namespace NetworkRailBusinessSystems\Entra\Tests\Unit\Entra\Actions;
 
 use Illuminate\Support\Facades\Session;
 use NetworkRailBusinessSystems\Entra\Entra;
-use NetworkRailBusinessSystems\Entra\EntraAccessToken;
+use NetworkRailBusinessSystems\Entra\Models\EntraAccessToken;
 use NetworkRailBusinessSystems\Entra\Tests\TestCase;
 
 class RefreshTokenTest extends TestCase

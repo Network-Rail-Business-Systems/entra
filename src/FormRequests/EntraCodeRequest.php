@@ -1,8 +1,9 @@
 <?php
 
-namespace NetworkRailBusinessSystems\Entra;
+namespace NetworkRailBusinessSystems\Entra\FormRequests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use NetworkRailBusinessSystems\Entra\Rules\EntraStateMatches;
 
 class EntraCodeRequest extends FormRequest
 {

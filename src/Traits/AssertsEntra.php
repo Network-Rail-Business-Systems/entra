@@ -1,10 +1,11 @@
 <?php
 
-namespace NetworkRailBusinessSystems\Entra;
+namespace NetworkRailBusinessSystems\Entra\Traits;
 
 use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
+use NetworkRailBusinessSystems\Entra\Tests\Models\User;
 
 trait AssertsEntra
 {
@@ -16,6 +17,9 @@ trait AssertsEntra
             'scopes' => '',
             'secret' => 'secret',
             'tenant' => 'tenant',
+            'models' => [
+                'user' => User::class,
+            ],
         ]);
 
         Http::fake(function (Request $request) {
