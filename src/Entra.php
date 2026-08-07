@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
+use NetworkRailBusinessSystems\Entra\Exceptions\EntraException;
 use NetworkRailBusinessSystems\Entra\Models\EntraAccessToken;
 use NetworkRailBusinessSystems\Entra\Models\EntraUser;
 
@@ -30,6 +31,10 @@ class Entra
             ->get(self::entraMeRoute())
             ->json();
 
+        if (array_key_exists('error', $response) === true) {
+            throw new EntraException($response, __LINE__);
+        }
+
         return new EntraUser(
             $response['id'],
             $response['userPrincipalName'],
@@ -49,6 +54,7 @@ class Entra
         $response = Http::withOptions([
             'proxy' => config('entra.proxy'),
         ])
+            ->asForm()
             ->acceptJson()
             ->post(
                 self::entraTokenRoute(),
@@ -62,6 +68,10 @@ class Entra
                 ],
             )
             ->json();
+
+        if (array_key_exists('error', $response) === true) {
+            throw new EntraException($response, __LINE__);
+        }
 
         $token = new EntraAccessToken(
             $response['access_token'],
@@ -82,6 +92,7 @@ class Entra
         $response = Http::withOptions([
             'proxy' => config('entra.proxy'),
         ])
+            ->asForm()
             ->acceptJson()
             ->post(
                 self::entraTokenRoute(),
@@ -94,6 +105,10 @@ class Entra
                 ],
             )
             ->json();
+
+        if (array_key_exists('error', $response) === true) {
+            throw new EntraException($response, __LINE__);
+        }
 
         $token = new EntraAccessToken(
             $response['access_token'],

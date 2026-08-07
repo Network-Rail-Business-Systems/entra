@@ -9,6 +9,12 @@ use NetworkRailBusinessSystems\Entra\Tests\Models\User;
 
 trait AssertsEntra
 {
+    public bool $entraShouldFail = false;
+
+    public string $entraError = '';
+
+    public string $entraErrorDescription = '';
+
     public function useEntraEmulator(): void
     {
         config()->set('entra', [
@@ -24,6 +30,13 @@ trait AssertsEntra
 
         Http::fake(function (Request $request) {
             $data = $request->data();
+
+            if ($this->entraShouldFail === true) {
+                return $this->entraHttpResponse([
+                    'error' => $this->entraError,
+                    'error_description' => $this->entraErrorDescription,
+                ]);
+            }
 
             if (array_key_exists('code', $data) === true) {
                 // Redeem Code
@@ -64,6 +77,15 @@ trait AssertsEntra
                 'userPrincipalName' => 'jbloggs@networkrail.co.uk',
             ]);
         });
+    }
+
+    public function entraShouldFail(
+        string $error = 'invalid_grant',
+        string $description = 'A123: Grant is invalid. Trace ID: abc123',
+    ): void {
+        $this->entraShouldFail = true;
+        $this->entraError = $error;
+        $this->entraErrorDescription = $description;
     }
 
     protected function entraHttpResponse(
