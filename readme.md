@@ -6,294 +6,112 @@
 ![PHP version](.github/php.svg)
 ![Tests status](.github/tests.svg)
 
-Easily sign-in and poll users and groups in Microsoft Entra, built using [Laravel Microsoft Graph](https://github.com/dcblogdev/laravel-microsoft-graph). 
+Authenticate users with Entra Single Sign On
 
-## Setup
+## Limitations
 
-1. Install this library using `Composer`:
+Due to Network Rail policies, Entra applications cannot be given application level access.
+
+As such, we cannot poll Entra directly with guest users.
+
+Since our systems require guests to be able to poll the directory, Entra can only be used for authentication.
+
+## Installation
+
+1. Install using Composer:
    ```bash
    composer require networkrailbusinesssystems/entra
    ```
-2. Publish the Entra configuration file using `Artisan`:
+2. Publish the `entra.php` config file:
    ```bash
    php artisan vendor:publish --tag="entra"
    ```
-3. Publish the MsGraph configuration file
-   ```bash
-   php artisan vendor:publish --provider="Dcblogdev\MsGraph\MsGraphServiceProvider" --tag="config"
-   ```
-   * Set `scopes` as required
-   * More information is available in the [Laravel Microsoft Graph](https://github.com/dcblogdev/laravel-microsoft-graph) documentation
-4. Publish the MsGraph migration file
-   ```bash
-   php artisan vendor:publish --provider="Dcblogdev\MsGraph\MsGraphServiceProvider" --tag="migrations"
-   ```
-   * Consider adding a foreign key to the `user_id` column for greater efficiency
-5. Adjust the `entra.php` configuration file to suit your needs
-6. Setup your authenticatable User model
-   * Implement the `EntraAuthenticatable` interface on your chosen Model
-   * Add the `AuthenticatesWithEntra` trait on your chosen Model for a standard fetch and sync setup, or implement the methods yourself
-7. Add the Entra authentication routes to your `routes/web.php` using the macro:
+   * You may skip this step if your `User` model's FQN is `App\Models\User`
+   * Set the `entra.models.user` setting to your `User` model:
+     ```php
+     return [
+         ...
+         'models' => [
+             'user' => User::class,
+         ],
+         ...
+     ];
+     ```
+3. Adjust your `.env` to include the required settings
+4. Implement the `AuthenticatesWithEntra` interface on your `User`
+5. Add the Entra routes to your `routes/web.php` using the macro:
    ```php
    Route::entra();
-   
+   ```
+6. Secure your other routes using the `EntraAuthenticated` middleware:
+   ```php
    Route::middleware('EntraAuthenticated')->group(function () {
        // Your authenticated routes here...
+   }
+   ```
+7. Use the `EntraTokenExists` middleware on routes which require an access token:
+   ```php
+   Route::middleware('EntraTokenExists')->group(function () {
+       // Your authenticated token routes here...
    }
    ```
 
 ## Configuration
 
-### create_users
+The following settings can be changed in your `.env`:
 
-Whether to allow Users without an account in the system already to sign-in.
+| .env key        | Config key      | Required | Notes                                         |
+|-----------------|-----------------|----------|-----------------------------------------------|
+| ENTRA_CLIENT    | entra.client    | Yes      | The Entra application / client ID             |
+| ENTRA_PROXY     | entra.proxy     | No       | The proxy URL to use for connecting to Entra  |
+| ENTRA_SCOPES    | entra.scopes    | No       | The scopes to use when polling Entra          |
+| ENTRA_SECRET    | entra.secret    | Yes      | The Entra application secret                  |
+| ENTRA_TENANT    | entra.tenant    | Yes      | The Entra directory / tenant ID               |
 
-When set to `true`, Entra will automatically create a new User record for anyone who successfully signs in.
+The following additional settings are available in the `entra.php` configuration file:
 
-When set to `false`, Users must be manually added before they can sign-in, even with a valid SSO session.
+| Config key        | Required | Default         | Notes                        |
+|-------------------|----------|-----------------|------------------------------|
+| entra.models.user | Yes      | App\Models\User | The FQN to your `User` model |
 
-### messages
+## Usage
 
-Customise any of the error messages thrown by Entra.
+There are two main ways to use this library:
 
-| Key           | Usage                                                                                  |
-|---------------|----------------------------------------------------------------------------------------|
-| existing_only | Shown when a new User attempts to log into a system with `create_users` set to `false` |
+1. Automatic login
+2. User initiated login
 
+### Automatic login
 
-### sync_attributes
+To automatically login Users across the entire system, simply wrap all your `web` routes in `EntraAuthenticated`.
 
-Any attributes set here will automatically be filled when signing in, keeping the User up to date with any changes in Entra.
+### User initiated login
 
-The array should contain a key-value pair in `entra => laravel` format.
+If some pages should be available without a login, only wrap the needed `web` routes in `EntraAuthenticated`.
+
+When users attempt to access those pages they will be logged in automatically.
+
+You could also provide a `Sign in` or `Login` button someone on your interface which points to the `entra.login` route.
+
+### Signing out
+
+Users can visit the `entra.logout` route to sign out.
+
+This will only sign them out of the local system, not their Entra browser session.
+
+### Preventing Users being created
+
+Some systems do not allow `User` models to be created automatically.
+
+To prevent this, call `abort()` or throw an exception in your `AuthenticatesWithEntra` implementation. 
+
+### Access Token
+
+You can find the current `EntraAccessToken` for the logged in `User` in their session:
 
 ```php
-'sync_attributes' => [
-    'mail' => 'email',
-],
+/** @var ?EntraAccessToken $token */
+$token = Session::get(Entra::ENTRA_TOKEN);
 ```
 
-### user_model
-
-The fully qualified class name of the Model used for Laravel authentication.
-
-```php
-use App/Models/User;
-
-'user_model' => User::class,
-```
-
-### emulator
-
-These attributes controls the Entra emulator, and the mock data available to it.
-
-See the "Emulator" section further on for more information.
-
-## Signing in and out
-
-Users will automatically be redirected to the Microsoft Azure login page whenever they attempt to access an authenticated route as a guest.
-
-The `EntraServiceProvider` automatically registers the relevant event listeners for authentication.
-
-### Automatic
-
-If you wrap all of your system's endpoints in the `EntraAuthenticated` middleware, Users will be automatically kicked to the Entra login page.
-
-Should they become signed out for whatever reason, they will be kicked to the Entra login screen.
-
-This may or may not be desirable based on how much of the system should be available to non-users.
-
-### Manual sign-in and out
-
-You can allow users to manually login by providing a link to the `login` route, which will take them to the Entra login page.
-
-Users can logout by calling the `logout` route, which will take them to the Entra logout page.
-
-## Middleware
-
-The `EntraAuthenticated` middleware has been provided to replace the base `MsGraphAuthenticated` middleware.
-
-This works in the same way as the base middleware, adding support for Laravel's `intended` destination route handling.
-
-## Querying Entra
-
-You can use the `Laravel Microsoft Graph` library as normal.
-
-Entra queries on routes outside of the `EntraAuthenticated` middleware must connect to Entra first, otherwise the request will hit a 302 redirect and fail.
-
-### Service Accounts
-
-Calling `MsGraph` will access Entra using the currently signed-in user's credentials.
-
-Calling `MsGraphAdmin` will access Entra as the application, without a signed-in user.
-
-`MsGraphAdmin` should be used for any calls to Entra which are performed in the background, such as queues, jobs, and commands.
-
-Any calls using the models provided by this library will automatically fall back to the `MsGraphAdmin` account if there is no signed-in user.
-
-### MsGraph
-
-A drop-in alias for the `MsGraph` facade has been provided which adds docblocks for IDE support.
-
-The `connect` method has been partially overridden to add support for Laravel's inbuilt `intended` route handling.
-
-### MsGraphAdmin
-
-A drop-in alias for the `MsGraphAdmin` facade has been provided which adds docblocks for IDE support.
-
-### EntraGroup
-
-#### Get
-
-Search for and return a specific group.
-
-| Parameter | Type   | Default | Usage                                  |
-|-----------|--------|---------|----------------------------------------|
-| $term     | string |         | A unique string to find the group by   |
-| $field    | string | mail    | Which field to look for the `$term` in |
-| $select   | ?array | []      | Which fields to return                 |
-| :returns  | ?array |         | The group as an array, or null         |
-
-#### List
-
-Search for groups which start with a term.
-
-| Parameter | Type   | Default | Usage                                  |
-|-----------|--------|---------|----------------------------------------|
-| $term     | string |         | A unique string to find the group by   |
-| $field    | string | mail    | Which field to look for the `$term` in |
-| $limit    | int    | 10      | How many results to show               |
-| $select   | ?array | []      | Which fields to return                 |
-| :returns  | array  |         | An array of groups                     |
-
-### EntraGroupMembers
-
-#### Get
-
-Retrieve a list of users for a group by the group's ID.
-
-Entra will be polled until all of the group's users have been loaded.
-
-| Parameter | Type   | Default  | Usage                                    |
-|-----------|--------|----------|------------------------------------------|
-| $term     | string |          | A unique string to find the group by     |
-| $field    | string | mail     | Which field to look for the `$term` in   |
-| $select   | ?array | ['mail'] | Which fields to return                   |
-| :returns  | ?array |          | The group's members as an array, or null |
-
-### EntraUser
-
-#### Get
-
-Search for and return a specific user.
-
-| Parameter | Type   | Default                       | Usage                                  |
-|-----------|--------|-------------------------------|----------------------------------------|
-| $term     | string |                               | A unique string to find the user by    |
-| $field    | string | mail                          | Which field to look for the `$term` in |
-| $select   | ?array | config(entra.sync_attributes) | Which fields to return                 |
-| :returns  | ?array |                               | The user as an array, or null          |
-
-#### List
-
-Search for users which start with a term.
-
-| Parameter | Type   | Default                       | Usage                                  |
-|-----------|--------|-------------------------------|----------------------------------------|
-| $term     | string |                               | A unique string to find the user by    |
-| $field    | string | mail                          | Which field to look for the `$term` in |
-| $limit    | int    | 10                            | How many results to show               |
-| $select   | ?array | config(entra.sync_attributes) | Which fields to return                 |
-| :returns  | array  |                               | An array of users                      |
-
-#### Import
-
-Search for and import a specific user to the database.
-
-If the user already exists they will be updated.
-
-| Parameter | Type                  | Default                       | Usage                                  |
-|-----------|-----------------------|-------------------------------|----------------------------------------|
-| $term     | string                |                               | A unique string to find the user by    |
-| $field    | string                | mail                          | Which field to look for the `$term` in |
-| $select   | ?array                | config(entra.sync_attributes) | Which fields to return                 |
-| :returns  | ?EntraAuthenticatable |                               | The user model, or null                |
-
-## Commands
-
-The following Artisan commands are available for use:
-
-| Command             | Parameters                                    | Usage                                              |
-|---------------------|-----------------------------------------------|----------------------------------------------------|
-| entra:import-user   | $term, $entraField = 'mail'                   | Import a single User by the given term             |
-| entra:refresh-users | $laravelField = 'email', $entraField = 'mail' | Re-import all Users in the system by a given field |
-
-## Rules
-
-### UserExistsInEntra
-
-Ensure that the given User exists in Entra.
-
-```php
-// Request data
-[
-    'email' => 'joe.bloggs@networkrail.co.uk',
-];
-
-// FormRequest rules()
-'email' => [
-    new UserExistsInEntra('mail'),
-];
-```
-
-You may provide the field to match the value to as the first parameter of the Rule.
-
-## Emulator
-
-It is unlikely that your unit tests will ever be connected to a live Entra instance.
-
-You can mock `MsGraph` for specific calls, however you may prefer to re-use a defined list of results.
-
-The emulator only works with the models provided by this library.
-
-Setting `entra.emulator.enabled = true` in your config will enable the emulator.
-
-You may also use the `AssertsEntra` trait on your base `TestCase` class to make the `useEntraEmulator()` method available in your tests.
-
-Emulation does not support signing in or out.
-
-### EntraGroup and EntraGroupMembers
-
-Defining a list of `groups` on the `entra.emulator.groups` key will allow you to create a custom list of groups with members which you can re-use.
-
-Performing an `EntraGroup::get` will return a matching group from the list.
-
-Performing an `EntraGroup::list` will return a matching set of results from the list.
-
-Performing an `EntraGroupMembers::get` will return a matching group's members from the list.
-
-### EntraUser
-
-Defining a list of `users` on the `entra.emulator.users` key will allow you to create a custom list of users which you can re-use.
-
-Performing an `EntraUser::get` or `EntraUser::import` will return a matching user from the list.
-
-Performing an `EntraUser::list` will return a matching set of results from the list.
-
-### Sample Entra responses
-
-Sample responses are provided on the relevant EntraModel.
-
-## Roadmap
-
-* Add 302 handler to MsGraph facade
-
-## Help and support
-
-You are welcome to raise any issues or questions on GitHub.
-
-If you wish to contribute to this library, raise an issue before submitting a forked pull request.
-
-## Licence
-
-Published under the MIT licence.
+Entra may be expanded in the future with endpoints for use.

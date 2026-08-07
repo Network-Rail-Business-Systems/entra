@@ -2,17 +2,12 @@
 
 namespace NetworkRailBusinessSystems\Entra\Tests\Unit\EntraServiceProvider;
 
-use Dcblogdev\MsGraph\Events\NewMicrosoft365SignInEvent;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use NetworkRailBusinessSystems\Entra\EntraServiceProvider;
 use NetworkRailBusinessSystems\Entra\Tests\TestCase;
 
 class BootTest extends TestCase
 {
-    protected EntraServiceProvider $provider;
-
     protected string $basePath;
 
     protected string $outputPath;
@@ -21,8 +16,6 @@ class BootTest extends TestCase
     {
         parent::setUp();
 
-        $this->provider = new EntraServiceProvider(app());
-        $this->provider->boot();
         Route::entra();
 
         $this->basePath = realpath(__DIR__ . '/../../../src');
@@ -40,28 +33,15 @@ class BootTest extends TestCase
             $publishes,
         );
 
+        Route::hasMiddlewareGroup('EntraAuthenticated');
+        Route::hasMiddlewareGroup('EntraTokenExists');
+
         $this->assertTrue(
             Route::hasMacro('entra'),
         );
 
-        $this->assertTrue(
-            Event::hasListeners(NewMicrosoft365SignInEvent::class),
-        );
-
         Route::has('login');
+        Route::has('connect');
         Route::has('logout');
-        Route::hasMiddlewareGroup('EntraAuthenticated');
-
-        $commands = Artisan::all();
-
-        $this->assertArrayHasKey(
-            'entra:import-user',
-            $commands,
-        );
-
-        $this->assertArrayHasKey(
-            'entra:refresh-users',
-            $commands,
-        );
     }
 }

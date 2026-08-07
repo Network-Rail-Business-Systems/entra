@@ -2,13 +2,11 @@
 
 namespace NetworkRailBusinessSystems\Entra;
 
-use Dcblogdev\MsGraph\Events\NewMicrosoft365SignInEvent;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
-use NetworkRailBusinessSystems\Entra\Commands\ImportUser;
-use NetworkRailBusinessSystems\Entra\Commands\RefreshUsers;
+use NetworkRailBusinessSystems\Entra\Controllers\EntraController;
 use NetworkRailBusinessSystems\Entra\Middleware\EntraAuthenticated;
+use NetworkRailBusinessSystems\Entra\Middleware\EntraTokenExists;
 
 class EntraServiceProvider extends ServiceProvider
 {
@@ -26,28 +24,18 @@ class EntraServiceProvider extends ServiceProvider
             __DIR__ . '/config.php' => config_path('entra.php'),
         ], 'entra');
 
-        $this->commands([
-            ImportUser::class,
-            RefreshUsers::class,
-        ]);
-
         Route::aliasMiddleware('EntraAuthenticated', EntraAuthenticated::class);
+        Route::aliasMiddleware('EntraTokenExists', EntraTokenExists::class);
 
         Route::macro('entra', function () {
             Route::prefix('/entra')
+                ->name('entra.')
                 ->controller(EntraController::class)
                 ->group(function () {
-                    Route::get('/connect', 'connect')->name('login');
-
-                    Route::middleware('EntraAuthenticated')->group(function () {
-                        Route::get('/disconnect', 'disconnect')->name('logout');
-                    });
+                    Route::get('/login', 'login')->name('login');
+                    Route::get('/connect', 'connect')->name('connect');
+                    Route::get('/logout', 'logout')->name('logout');
                 });
         });
-
-        Event::listen(
-            NewMicrosoft365SignInEvent::class,
-            [EntraListener::class, 'handle'],
-        );
     }
 }

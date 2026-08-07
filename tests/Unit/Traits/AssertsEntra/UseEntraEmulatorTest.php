@@ -6,17 +6,11 @@ use NetworkRailBusinessSystems\Entra\Tests\TestCase;
 
 class UseEntraEmulatorTest extends TestCase
 {
-    protected function setUp(): void
+    public function test(): void
     {
-        parent::setUp();
-
-        $this->useEntraEmulator();
-    }
-
-    public function testLoadsExisting(): void
-    {
-        $this->assertTrue(
-            config('entra.emulator.enabled'),
+        $this->assertEquals(
+            'client',
+            config('entra.client'),
         );
     }
 }
