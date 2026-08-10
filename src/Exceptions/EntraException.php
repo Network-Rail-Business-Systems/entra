@@ -13,6 +13,7 @@ class EntraException extends ErrorException
         $error = Str::of($response['error_description'])
             ->between(': ', '. Trace ID:')
             ->whenEmpty(function () use ($response) {
+                // TODO Coverage
                 return $response['error_description'];
             })
             ->toString();
