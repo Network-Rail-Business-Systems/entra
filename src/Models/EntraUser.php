@@ -2,7 +2,9 @@
 
 namespace NetworkRailBusinessSystems\Entra\Models;
 
-class EntraUser
+use Illuminate\Contracts\Support\Arrayable;
+
+class EntraUser implements Arrayable
 {
     public string $phone = '';
 
@@ -19,5 +21,20 @@ class EntraUser
         string $mobilePhone,
     ) {
         $this->phone = $businessPhones[0] ?? $mobilePhone;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'displayName' => $this->displayName,
+            'givenName' => $this->givenName,
+            'id' => $this->id,
+            'jobTitle' => $this->jobTitle,
+            'mail' => $this->mail,
+            'officeLocation' => $this->officeLocation,
+            'phone' => $this->phone,
+            'surname' => $this->surname,
+            'userPrincipalName' => $this->userPrincipalName,
+        ];
     }
 }
