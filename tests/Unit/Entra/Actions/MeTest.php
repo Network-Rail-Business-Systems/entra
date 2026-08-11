@@ -2,7 +2,6 @@
 
 namespace NetworkRailBusinessSystems\Entra\Tests\Unit\Entra\Actions;
 
-use NetworkRailBusinessSystems\Entra\Entra;
 use NetworkRailBusinessSystems\Entra\Exceptions\EntraException;
 use NetworkRailBusinessSystems\Entra\Models\EntraAccessToken;
 use NetworkRailBusinessSystems\Entra\Models\EntraUser;
@@ -14,7 +13,7 @@ class MeTest extends TestCase
     {
         $this->assertInstanceOf(
             EntraUser::class,
-            Entra::me(
+            EntraUser::me(
                 EntraAccessToken::fake(),
             ),
         );
@@ -26,7 +25,7 @@ class MeTest extends TestCase
 
         $this->entraShouldFail();
 
-        Entra::me(
+        EntraUser::me(
             EntraAccessToken::fake(),
         );
     }

@@ -10,7 +10,7 @@ class EntraExceptionTest extends TestCase
 {
     #[DataProvider('expectations')]
     public function test(
-        string $error,
+        string|array $error,
         string $errorDescription,
         int $code,
         string $message,
@@ -57,6 +57,15 @@ class EntraExceptionTest extends TestCase
                 'errorDescription' => 'There is a snake in my boot',
                 'code' => 500,
                 'message' => 'There is a snake in my boot',
+            ],
+            [
+                'error' => [
+                    'code' => 'temporarily_unavailable',
+                    'message' => 'potato',
+                ],
+                'errorDescription' => 'There is a snake in my boot',
+                'code' => 503,
+                'message' => 'potato',
             ],
         ];
     }

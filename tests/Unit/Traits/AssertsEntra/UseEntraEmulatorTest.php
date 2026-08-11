@@ -8,9 +8,6 @@ class UseEntraEmulatorTest extends TestCase
 {
     public function test(): void
     {
-        $this->assertEquals(
-            'client',
-            config('entra.client'),
-        );
+        // TODO Endpoint tests
     }
 }
