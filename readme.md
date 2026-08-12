@@ -120,9 +120,10 @@ Entra may be expanded in the future with endpoints for use.
 
 Add the `AssertsEntra` trait to your testing class to use the following methods:
 
-| Method                 | Parameters    | Returns          | Notes                                                            |
-|------------------------|---------------|------------------|------------------------------------------------------------------|
-| useEntraEmulator       |               | void             | Adds HTTP mocks to all Entra endpoints with successful responses |
-| entraShouldFail        | string $error | void             | Causes all Entra endpoints to fail with an error message         |
-| entraShouldReturnEmpty |               | void             | Causes all Entra endpoints to return an empty result set         |
-| entraFakeUser          | bool $model   | EntraUser, array | Create a mock EntraUser model or dataset                         |
+| Method                 | Parameters                 | Returns          | Notes                                                            |
+|------------------------|----------------------------|------------------|------------------------------------------------------------------|
+| useEntraEmulator       |                            | void             | Adds HTTP mocks to all Entra endpoints with successful responses |
+| entraShouldFail        | string $error              | void             | Causes all Entra endpoints to fail with an error message         |
+| entraShouldReturnEmpty |                            | void             | Causes all Entra endpoints to return an empty result set         |
+| entraFakeUser          | bool $model                | EntraUser, array | Create a mock EntraUser model or dataset                         |
+| entraUsersResponse     | int $count, bool $nextLink | array            | Create a mock EntraList filled with EntraUsers                   |
