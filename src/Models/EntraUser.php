@@ -29,10 +29,20 @@ class EntraUser implements Arrayable
 
     public static function make(array $details): EntraUser
     {
-        unset($details['@odata.context']);
-        unset($details['preferredLanguage']);
-
-        return new EntraUser(...$details);
+        return new EntraUser(
+            $details['id'],
+            $details['userPrincipalName'],
+            $details['mail'],
+            $details['displayName'],
+            $details['givenName'],
+            $details['surname'],
+            $details['jobTitle'] ?? '',
+            $details['officeLocation'] ?? '',
+            $details['department'] ?? '',
+            (int) ($details['employeeId'] ?? 0),
+            $details['businessPhones'] ?? [],
+            $details['mobilePhone'] ?? '',
+        );
     }
 
     public function toArray(): array
