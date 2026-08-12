@@ -95,6 +95,7 @@ class EntraUser implements Arrayable
         string $filter = '',
         array $select = [],
         int $per = 999,
+        array $headers = [],
     ): EntraList {
         $response = Entra::query(
             Entra::entraUserRoute(),
@@ -102,6 +103,7 @@ class EntraUser implements Arrayable
             $filter,
             $select,
             $per,
+            $headers,
         );
 
         return EntraList::make(
