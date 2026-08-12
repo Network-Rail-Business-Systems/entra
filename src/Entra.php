@@ -24,33 +24,40 @@ class Entra
     // Actions
     public static function query(
         string $endpoint,
-        EntraAccessToken $token,
+        EntraAccessToken &$token,
         string $filter = '',
         array $select = [],
         int $top = -1,
         array $headers = [],
         bool $acceptJson = true,
     ): array|string {
-        $query = [];
+        if ($token->hasExpired() === true) {
+            $token = Entra::refreshToken($token);
+        }
+
+        $parameters = [];
 
         if (empty($filter) === false) {
-            $query['$filter'] = $filter;
+            $parameters['$filter'] = $filter;
         }
 
         if (empty($select) === false) {
-            $query['$select'] = implode(',', $select);
+            $parameters['$select'] = implode(',', $select);
         }
 
         if ($top !== -1) {
-            $query['$top'] = $top;
+            $parameters['$top'] = $top;
         }
 
         $query = Http::withOptions([
             'proxy' => config('entra.proxy'),
         ])
             ->withToken($token->accessToken)
-            ->withHeaders($headers)
-            ->withQueryParameters($query);
+            ->withHeaders($headers);
+
+        if (empty($parameters) === false) {
+            $query->withQueryParameters($parameters);
+        }
 
         if ($acceptJson === true) {
             $query->acceptJson();
