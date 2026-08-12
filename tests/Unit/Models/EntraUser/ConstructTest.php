@@ -12,7 +12,7 @@ class ConstructTest extends TestCase
         $user = new EntraUser(
             'abc123',
             'jbloggs@networkrail.co.uk',
-            'joe.bloggs@networkrail.co.uk',
+            'Joe.Bloggs@networkrail.co.uk',
             'Joe Bloggs',
             'Joe',
             'Bloggs',
@@ -22,6 +22,11 @@ class ConstructTest extends TestCase
             12345,
             ['01234567890'],
             '07712345678',
+        );
+
+        $this->assertEquals(
+            'joe.bloggs@networkrail.co.uk',
+            $user->mail,
         );
 
         $this->assertEquals(
