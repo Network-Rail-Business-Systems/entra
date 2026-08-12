@@ -60,6 +60,7 @@ class EntraUser implements Arrayable
             headers: [
                 'ConsistencyLevel' => 'eventual',
             ],
+            acceptJson: false,
         );
 
         return (int) $response;

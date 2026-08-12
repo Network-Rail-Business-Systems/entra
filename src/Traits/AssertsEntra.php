@@ -117,6 +117,9 @@ trait AssertsEntra
         $faker = $this->faker();
 
         $data = [
+            'businessPhones' => [
+                $faker->phoneNumber(),
+            ],
             'department' => $faker->company(),
             'displayName' => $faker->name(),
             'employeeId' => $faker->numerify('#####'),
@@ -125,9 +128,9 @@ trait AssertsEntra
             'jobTitle' => $faker->jobTitle(),
             'mail' => $faker->email(),
             'officeLocation' => $faker->streetAddress(),
-            'phone' => $faker->phoneNumber(),
+            'mobilePhone' => $faker->phoneNumber(),
             'surname' => $faker->lastName(),
-            'userPrincipalName' => $this->faker()->email(),
+            'userPrincipalName' => $faker->email(),
         ];
 
         return $model === true
