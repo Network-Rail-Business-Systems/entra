@@ -2,10 +2,13 @@
 
 namespace NetworkRailBusinessSystems\Entra\Traits;
 
+use Faker\Generator;
 use GuzzleHttp\Promise\PromiseInterface;
+use Illuminate\Container\Container;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
-use NetworkRailBusinessSystems\Entra\Tests\Models\User;
+use NetworkRailBusinessSystems\Entra\Entra;
+use NetworkRailBusinessSystems\Entra\Models\EntraUser;
 
 trait AssertsEntra
 {
@@ -15,22 +18,11 @@ trait AssertsEntra
 
     public string $entraErrorDescription = '';
 
+    public bool $entraShouldReturnEmpty = false;
+
     public function useEntraEmulator(): void
     {
-        config()->set('entra', [
-            'client' => 'client',
-            'proxy' => null,
-            'scopes' => '',
-            'secret' => 'secret',
-            'tenant' => 'tenant',
-            'models' => [
-                'user' => User::class,
-            ],
-        ]);
-
         Http::fake(function (Request $request) {
-            $data = $request->data();
-
             if ($this->entraShouldFail === true) {
                 return $this->entraHttpResponse([
                     'error' => $this->entraError,
@@ -38,8 +30,10 @@ trait AssertsEntra
                 ]);
             }
 
+            $data = $request->data();
+
+            // Redeem Code
             if (array_key_exists('code', $data) === true) {
-                // Redeem Code
                 return $this->entraHttpResponse([
                     'access_token' => 'abc123',
                     'expires_in' => 12345,
@@ -50,8 +44,8 @@ trait AssertsEntra
                 ]);
             }
 
+            // Refresh Token
             if (array_key_exists('refresh_token', $data) === true) {
-                // Refresh Token
                 return $this->entraHttpResponse([
                     'access_token' => 'abc123',
                     'expires_in' => 12345,
@@ -61,21 +55,29 @@ trait AssertsEntra
                 ]);
             }
 
-            // Me
-            return $this->entraHttpResponse([
-                'businessPhones' => [
-                    '01234567890',
-                ],
-                'displayName' => 'Joe Bloggs',
-                'givenName' => 'Joe',
-                'id' => 'abc123',
-                'jobTitle' => 'Developer',
-                'mail' => 'joe.bloggs@networkrail.co.uk',
-                'mobilePhone' => '07712345678',
-                'officeLocation' => 'Milton Keynes',
-                'surname' => 'Bloggs',
-                'userPrincipalName' => 'jbloggs@networkrail.co.uk',
-            ]);
+            $url = $request->url();
+            $count = $this->entraShouldReturnEmpty === false
+                ? 3
+                : 0;
+
+            return match (true) {
+                str_contains($url, '/$count') => Http::response("$count"),
+                str_contains($url, '/users/next-link') => $this->entraHttpResponse(
+                    $this->entraUsersResponse($count, false),
+                ),
+                str_contains($url, '/users') => $this->entraHttpResponse(
+                    $this->entraUsersResponse($count, true),
+                ),
+                str_contains($url, '/me') => $this->entraHttpResponse(
+                    $this->entraShouldReturnEmpty === false
+                        ? $this->entraFakeUser(false)
+                        : [],
+                ),
+                default => $this->entraHttpResponse([
+                    'error' => 'unknown_endpoint',
+                    'error_description' => "\"$url\" is not a supported Entra endpoint",
+                ]),
+            };
         });
     }
 
@@ -88,6 +90,54 @@ trait AssertsEntra
         $this->entraErrorDescription = $description;
     }
 
+    public function entraShouldReturnEmpty(): void
+    {
+        $this->entraShouldReturnEmpty = true;
+    }
+
+    public function entraUsersResponse(int $count, bool $nextLink): array
+    {
+        $response = [
+            'value' => [],
+        ];
+
+        if ($nextLink === true) {
+            $response[Entra::NEXT_LINK] = 'http://localhost/users/next-link';
+        }
+
+        for ($current = 0; $current < $count; ++$current) {
+            $response['value'][] = $this->entraFakeUser(false);
+        }
+
+        return $response;
+    }
+
+    public function entraFakeUser(bool $model = true): EntraUser|array
+    {
+        $faker = $this->faker();
+
+        $data = [
+            'businessPhones' => [
+                $faker->phoneNumber(),
+            ],
+            'department' => $faker->company(),
+            'displayName' => $faker->name(),
+            'employeeId' => $faker->numerify('#####'),
+            'givenName' => $faker->firstName(),
+            'id' => $faker->uuid(),
+            'jobTitle' => $faker->jobTitle(),
+            'mail' => $faker->email(),
+            'officeLocation' => $faker->streetAddress(),
+            'mobilePhone' => $faker->phoneNumber(),
+            'surname' => $faker->lastName(),
+            'userPrincipalName' => $faker->email(),
+        ];
+
+        return $model === true
+            ? EntraUser::make($data)
+            : $data;
+    }
+
     protected function entraHttpResponse(
         array $properties,
         int $status = 200,
@@ -96,5 +146,10 @@ trait AssertsEntra
             json_encode($properties),
             $status,
         );
+    }
+
+    protected function faker(): Generator
+    {
+        return Container::getInstance()->make(Generator::class);
     }
 }

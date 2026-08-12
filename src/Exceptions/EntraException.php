@@ -10,12 +10,14 @@ class EntraException extends ErrorException
 {
     public function __construct(array $response, int $line)
     {
-        $error = Str::of($response['error_description'])
+        $errorCode = $response['error']['code']
+            ?? $response['error'];
+
+        $errorDescription = $response['error']['message']
+            ?? $response['error_description'];
+
+        $error = Str::of($errorDescription)
             ->between(': ', '. Trace ID:')
-            ->whenEmpty(function () use ($response) {
-                // TODO Coverage
-                return $response['error_description'];
-            })
             ->toString();
 
         $message = match ($response['error']) {
@@ -30,7 +32,7 @@ class EntraException extends ErrorException
             default => $error,
         };
 
-        $code = match ($response['error']) {
+        $code = match ($errorCode) {
             'invalid_grant',
             'interaction_required' => 403,
             'temporarily_unavailable' => 503,

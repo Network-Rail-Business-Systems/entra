@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Redirect;
 use NetworkRailBusinessSystems\Entra\Entra;
 use NetworkRailBusinessSystems\Entra\FormRequests\EntraCodeRequest;
 use NetworkRailBusinessSystems\Entra\Interfaces\AuthenticatesWithEntra;
+use NetworkRailBusinessSystems\Entra\Models\EntraUser;
 
 class EntraController extends Controller
 {
@@ -25,7 +26,7 @@ class EntraController extends Controller
             $request->input('code'),
         );
 
-        $entraUser = Entra::me($token);
+        $entraUser = EntraUser::me($token);
 
         /** @var class-string<AuthenticatesWithEntra> $userModel */
         $userModel = config('entra.models.user');

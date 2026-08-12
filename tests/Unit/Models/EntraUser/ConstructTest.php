@@ -18,6 +18,8 @@ class ConstructTest extends TestCase
             'Bloggs',
             'Developer',
             'Milton Keynes',
+            'Business Systems',
+            12345,
             ['01234567890'],
             '07712345678',
         );
@@ -39,6 +41,8 @@ class ConstructTest extends TestCase
             'Bloggs',
             'Developer',
             'Milton Keynes',
+            'Business Systems',
+            12345,
             [],
             '07712345678',
         );

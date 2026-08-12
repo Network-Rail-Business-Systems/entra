@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use NetworkRailBusinessSystems\Entra\Exceptions\EntraException;
 use NetworkRailBusinessSystems\Entra\Models\EntraAccessToken;
-use NetworkRailBusinessSystems\Entra\Models\EntraUser;
 
 class Entra
 {
@@ -20,33 +19,59 @@ class Entra
 
     public const string ENTRA_TOKEN = 'entra_token';
 
+    public const string NEXT_LINK = '@odata.nextLink';
+
     // Actions
-    public static function me(EntraAccessToken $token): EntraUser
-    {
-        $response = Http::withOptions([
+    public static function query(
+        string $endpoint,
+        EntraAccessToken $token,
+        string $filter = '',
+        array $select = [],
+        int $top = -1,
+        array $headers = [],
+        bool $acceptJson = true,
+    ): array|string {
+        $query = [];
+
+        if (empty($filter) === false) {
+            $query['$filter'] = $filter;
+        }
+
+        if (empty($select) === false) {
+            $query['$select'] = implode(',', $select);
+        }
+
+        if ($top !== -1) {
+            $query['$top'] = $top;
+        }
+
+        $query = Http::withOptions([
             'proxy' => config('entra.proxy'),
         ])
             ->withToken($token->accessToken)
-            ->acceptJson()
-            ->get(self::entraMeRoute())
-            ->json();
+            ->withHeaders($headers)
+            ->withQueryParameters($query);
 
-        if (array_key_exists('error', $response) === true) {
-            throw new EntraException($response, __LINE__);
+        if ($acceptJson === true) {
+            $query->acceptJson();
         }
 
-        return new EntraUser(
-            $response['id'],
-            $response['userPrincipalName'],
-            $response['mail'],
-            $response['displayName'],
-            $response['givenName'],
-            $response['surname'],
-            $response['jobTitle'],
-            $response['officeLocation'],
-            $response['businessPhones'],
-            $response['mobilePhone'],
-        );
+        $response = $query->get($endpoint);
+
+        if (
+            $acceptJson === true
+            || $response->ok() === false
+        ) {
+            $response = $response->json();
+
+            if (array_key_exists('error', $response) === true) {
+                throw new EntraException($response, __LINE__);
+            }
+        }
+
+        return $acceptJson === false
+            ? $response->body()
+            : $response;
     }
 
     public static function redeemCode(string $code): EntraAccessToken
@@ -175,6 +200,11 @@ class Entra
         $tenant = config('entra.tenant');
 
         return URL::to("https://login.microsoftonline.com/$tenant/oauth2/v2.0/token");
+    }
+
+    public static function entraUserRoute(): string
+    {
+        return 'https://graph.microsoft.com/v1.0/users';
     }
 
     public static function redirectUrlRoute(): string
