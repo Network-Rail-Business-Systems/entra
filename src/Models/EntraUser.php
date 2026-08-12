@@ -28,6 +28,9 @@ class EntraUser implements Arrayable
 
     public static function make(array $details): EntraUser
     {
+        unset($details['@odata.context']);
+        unset($details['preferredLanguage']);
+
         return new EntraUser(...$details);
     }
 

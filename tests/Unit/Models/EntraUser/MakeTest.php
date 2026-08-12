@@ -24,6 +24,8 @@ class MakeTest extends TestCase
             'mobilePhone' => '07712345678',
             'surname' => 'Bloggs',
             'userPrincipalName' => 'jbloggs@networkrail.co.uk',
+            '@odata.context' => 'gabba',
+            'preferredLanguage' => 'gabba',
         ]);
 
         $this->assertEquals(
