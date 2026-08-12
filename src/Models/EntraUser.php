@@ -23,6 +23,7 @@ class EntraUser implements Arrayable
         array $businessPhones = [],
         string $mobilePhone = '',
     ) {
+        $this->mail = strtolower($mail);
         $this->phone = $businessPhones[0] ?? $mobilePhone;
     }
 
