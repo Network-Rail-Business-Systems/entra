@@ -27,6 +27,7 @@ class ListTest extends TestCase
                 'mail eq \'a@b.com\'',
                 ['mail'],
                 50,
+                ['Content-Type' => 'text/json'],
             ),
         );
     }
