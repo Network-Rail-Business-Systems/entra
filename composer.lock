@@ -5907,20 +5907,21 @@
     "packages-dev": [
         {
             "name": "anthonyedmonds/laravel-testing-traits",
-            "version": "1.3.2",
+            "version": "1.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/AnthonyEdmonds/laravel-testing-traits.git",
-                "reference": "14c792300224c819b4e8f44d01d1bfd1fadb30a2"
+                "reference": "5fc5ebd9af750320f98434ef29b64e858d32b44c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/AnthonyEdmonds/laravel-testing-traits/zipball/14c792300224c819b4e8f44d01d1bfd1fadb30a2",
-                "reference": "14c792300224c819b4e8f44d01d1bfd1fadb30a2",
+                "url": "https://api.github.com/repos/AnthonyEdmonds/laravel-testing-traits/zipball/5fc5ebd9af750320f98434ef29b64e858d32b44c",
+                "reference": "5fc5ebd9af750320f98434ef29b64e858d32b44c",
                 "shasum": ""
             },
             "require": {
                 "laravel/framework": "^13",
+                "orchestra/testbench": "^11",
                 "php": "^8.3",
                 "phpunit/phpunit": "^12"
             },
@@ -5959,9 +5960,9 @@
             ],
             "support": {
                 "issues": "https://github.com/AnthonyEdmonds/laravel-testing-traits/issues",
-                "source": "https://github.com/AnthonyEdmonds/laravel-testing-traits/tree/1.3.2"
+                "source": "https://github.com/AnthonyEdmonds/laravel-testing-traits/tree/1.4.1"
             },
-            "time": "2026-06-09T14:09:41+00:00"
+            "time": "2026-08-13T08:30:33+00:00"
         },
         {
             "name": "brianium/paratest",

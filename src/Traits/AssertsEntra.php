@@ -2,9 +2,8 @@
 
 namespace NetworkRailBusinessSystems\Entra\Traits;
 
-use Faker\Generator;
+use AnthonyEdmonds\LaravelTestingTraits\UsesFaker;
 use GuzzleHttp\Promise\PromiseInterface;
-use Illuminate\Container\Container;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
 use NetworkRailBusinessSystems\Entra\Entra;
@@ -12,6 +11,8 @@ use NetworkRailBusinessSystems\Entra\Models\EntraUser;
 
 trait AssertsEntra
 {
+    use UsesFaker;
+
     public bool $entraShouldFail = false;
 
     public string $entraError = '';
@@ -146,10 +147,5 @@ trait AssertsEntra
             json_encode($properties),
             $status,
         );
-    }
-
-    protected function faker(): Generator
-    {
-        return Container::getInstance()->make(Generator::class);
     }
 }
