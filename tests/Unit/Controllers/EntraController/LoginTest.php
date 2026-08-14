@@ -39,7 +39,7 @@ class LoginTest extends TestCase
         $this->redirect = $this->controller->login();
 
         $this->assertStringStartsWith(
-            substr(Entra::entraAuthoriseRoute(), 0, -16),
+            substr(Entra::entraLoginRoute(), 0, -16),
             $this->redirect->getTargetUrl(),
         );
     }

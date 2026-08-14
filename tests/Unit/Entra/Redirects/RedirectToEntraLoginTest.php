@@ -10,7 +10,7 @@ class RedirectToEntraLoginTest extends TestCase
 {
     public function test(): void
     {
-        $redirect = Entra::redirectToEntraAuthenticate();
+        $redirect = Entra::redirectToEntraLogin();
 
         $this->assertTrue(
             Session::has(Entra::ENTRA_INTENDED),
