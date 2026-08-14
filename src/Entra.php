@@ -3,13 +3,16 @@
 namespace NetworkRailBusinessSystems\Entra;
 
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use NetworkRailBusinessSystems\Entra\Exceptions\EntraException;
+use NetworkRailBusinessSystems\Entra\Interfaces\AuthenticatesWithEntra;
 use NetworkRailBusinessSystems\Entra\Models\EntraAccessToken;
+use NetworkRailBusinessSystems\Entra\Models\EntraUser;
 
 class Entra
 {
@@ -154,6 +157,22 @@ class Entra
         Session::put(self::ENTRA_TOKEN, $token);
 
         return $token;
+    }
+
+    public static function loginUsingToken(EntraAccessToken $token): void
+    {
+        $entraUser = EntraUser::me($token);
+
+        /** @var class-string<AuthenticatesWithEntra> $userModel */
+        $userModel = config('entra.models.user');
+        $user = $userModel::findOrCreateByAzureId($entraUser->id);
+
+        Auth::login($user);
+    }
+
+    public static function currentToken(): ?EntraAccessToken
+    {
+        return Session::get(Entra::ENTRA_TOKEN);
     }
 
     // Redirects

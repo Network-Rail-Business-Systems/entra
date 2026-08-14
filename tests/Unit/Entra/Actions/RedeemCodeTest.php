@@ -2,7 +2,6 @@
 
 namespace NetworkRailBusinessSystems\Entra\Tests\Unit\Entra\Actions;
 
-use Illuminate\Support\Facades\Session;
 use NetworkRailBusinessSystems\Entra\Entra;
 use NetworkRailBusinessSystems\Entra\Exceptions\EntraException;
 use NetworkRailBusinessSystems\Entra\Models\EntraAccessToken;
@@ -19,7 +18,7 @@ class RedeemCodeTest extends TestCase
 
         $this->assertInstanceOf(
             EntraAccessToken::class,
-            Session::get(Entra::ENTRA_TOKEN),
+            Entra::currentToken(),
         );
     }
 

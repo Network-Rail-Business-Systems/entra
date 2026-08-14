@@ -10,7 +10,7 @@ class EntraLoginRouteTest extends TestCase
 {
     public function test(): void
     {
-        $route = Entra::entraLoginRoute();
+        $route = Entra::entraAuthoriseRoute();
         $state = Session::get(Entra::ENTRA_STATE);
 
         $this->assertEquals(

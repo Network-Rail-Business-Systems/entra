@@ -111,6 +111,8 @@ You can find the current `EntraAccessToken` for the logged in `User` in their se
 
 ```php
 /** @var ?EntraAccessToken $token */
+$token = Entra::currentToken();
+// or
 $token = Session::get(Entra::ENTRA_TOKEN);
 ```
 
