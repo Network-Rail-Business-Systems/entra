@@ -8,8 +8,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use NetworkRailBusinessSystems\Entra\Entra;
 use NetworkRailBusinessSystems\Entra\FormRequests\EntraCodeRequest;
-use NetworkRailBusinessSystems\Entra\Interfaces\AuthenticatesWithEntra;
-use NetworkRailBusinessSystems\Entra\Models\EntraUser;
 
 class EntraController extends Controller
 {
@@ -22,17 +20,19 @@ class EntraController extends Controller
 
     public function connect(EntraCodeRequest $request): RedirectResponse
     {
-        $token = Entra::redeemCode(
-            $request->input('code'),
-        );
+        $token = Entra::currentToken();
 
-        $entraUser = EntraUser::me($token);
+        if ($token !== null) {
+            if ($token->hasExpired() === true) {
+                $token->refresh();
+            }
+        } else {
+            $token = Entra::redeemCode(
+                $request->input('code'),
+            );
+        }
 
-        /** @var class-string<AuthenticatesWithEntra> $userModel */
-        $userModel = config('entra.models.user');
-        $user = $userModel::findOrCreateByAzureId($entraUser->id);
-
-        Auth::login($user);
+        Entra::loginUsingToken($token);
 
         return Entra::redirectToIntended();
     }

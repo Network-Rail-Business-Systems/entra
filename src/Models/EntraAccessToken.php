@@ -3,6 +3,7 @@
 namespace NetworkRailBusinessSystems\Entra\Models;
 
 use Carbon\Carbon;
+use NetworkRailBusinessSystems\Entra\Entra;
 
 class EntraAccessToken
 {
@@ -34,5 +35,10 @@ class EntraAccessToken
     public function hasExpired(): bool
     {
         return $this->expires_at->isPast() === true;
+    }
+
+    public function refresh(): EntraAccessToken
+    {
+        return Entra::refreshToken($this);
     }
 }
