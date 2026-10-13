@@ -8,6 +8,8 @@ use NetworkRailBusinessSystems\Entra\Entra;
 
 class EntraException extends ErrorException
 {
+    public bool $report = true;
+
     public function __construct(array $response, int $line)
     {
         $errorCode = $response['error']['code']
@@ -20,7 +22,7 @@ class EntraException extends ErrorException
             ->between(': ', '. Trace ID:')
             ->toString();
 
-        $message = match ($response['error']) {
+        $message = match ($errorCode) {
             'interaction_required',
             'invalid_client',
             'invalid_request',
@@ -44,6 +46,12 @@ class EntraException extends ErrorException
             default => 500,
         };
 
+        $this->report = match ($errorCode) {
+            'invalid_grant',
+            'temporarily_unavailable' => false,
+            default => true,
+        };
+
         parent::__construct(
             $message,
             $code,
@@ -51,5 +59,12 @@ class EntraException extends ErrorException
             Entra::class,
             $line,
         );
+    }
+
+    public function report(): ?false
+    {
+        return $this->report === true
+            ? false
+            : null;
     }
 }
