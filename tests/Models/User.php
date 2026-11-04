@@ -10,8 +10,12 @@ class User extends Model implements AuthenticatesWithEntra
 {
     use Authenticatable;
 
+    public static string $userAzureId;
+
     public static function findOrCreateByAzureId(string $azureId): AuthenticatesWithEntra
     {
+        self::$userAzureId = $azureId;
+
         return new User();
     }
 }

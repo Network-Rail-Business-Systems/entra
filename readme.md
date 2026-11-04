@@ -60,13 +60,19 @@ Since our systems require guests to be able to poll the directory, Entra can onl
 
 The following settings can be changed in your `.env`:
 
-| .env key        | Config key      | Required | Notes                                         |
-|-----------------|-----------------|----------|-----------------------------------------------|
-| ENTRA_CLIENT    | entra.client    | Yes      | The Entra application / client ID             |
-| ENTRA_PROXY     | entra.proxy     | No       | The proxy URL to use for connecting to Entra  |
-| ENTRA_SCOPES    | entra.scopes    | No       | The scopes to use when polling Entra          |
-| ENTRA_SECRET    | entra.secret    | Yes      | The Entra application secret                  |
-| ENTRA_TENANT    | entra.tenant    | Yes      | The Entra directory / tenant ID               |
+| .env key          | Config key                 | Required | Notes                                         |
+|-------------------|----------------------------|----------|-----------------------------------------------|
+| ENTRA_CLIENT      | entra.client               | Yes      | The Entra application / client ID             |
+| ENTRA_PROXY       | entra.proxy                | No       | The proxy URL to use for connecting to Entra  |
+| ENTRA_SCOPES      | entra.scopes               | No       | The scopes to use when polling Entra          |
+| ENTRA_SECRET      | entra.secret               | Yes      | The Entra application secret                  |
+| ENTRA_TENANT      | entra.tenant               | Yes      | The Entra directory / tenant ID               |
+| ENTRA_DEBUG       | entra.emulator.enabled     | No       | Whether to use the Entra emulator             |
+| ENTRA_EMULATOR_ID | entra.emulator.id          | No       | The Entra emulator ID to use when debugging   |
+
+The `entra.emulator` settings are optional and must be only used for development and testing purposes. 
+They allow you to emulate Entra user authentication without needing to connect to the Entra service.
+When `ENTRA_DEBUG` is set to true, the system uses `ENTRA_EMULATOR_ID` to identify the local user. The value must match the user's `azure_id` in the local database.
 
 The following additional settings are available in the `entra.php` configuration file:
 

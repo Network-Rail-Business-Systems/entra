@@ -165,7 +165,10 @@ class Entra
 
         /** @var class-string<AuthenticatesWithEntra> $userModel */
         $userModel = config('entra.models.user');
-        $user = $userModel::findOrCreateByAzureId($entraUser->id);
+
+        $user = config('entra.emulator.enabled') === true
+            ? $userModel::findOrCreateByAzureId(config('entra.emulator.id'))
+            : $userModel::findOrCreateByAzureId($entraUser->id);
 
         Auth::login($user);
     }
